@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HM_72H — Интерактивный демо-курс «Хаузмастер МКД»</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- STOP overlay: blocks the whole app until Reset. Content is JS-rendered (bilingual). -->
+<div id="stopOverlay" class="stop-overlay" hidden></div>
+
+<header class="app-header">
+  <div class="header-top">
+    <div class="brand">
+      <span class="brand-badge">HM</span>
+      <div class="brand-text" id="brandText"><!-- rendered by JS: title + subtitle --></div>
+    </div>
+    <div class="header-actions" id="headerActions"><!-- rendered by JS: persist toggle, teacher/STOP/Reset buttons, language switcher --></div>
+  </div>
+  <div class="header-status" id="headerStatus"><!-- rendered by JS: progress bar, screen counter, course meta --></div>
+</header>
+
+<div id="teacherPanel" class="teacher-panel" hidden></div>
+
+<div class="app-body">
+  <nav class="sidebar" id="sidebarNav" aria-label="Навигация по экранам курса"></nav>
+  <main class="main-content" id="screenContainer"></main>
+  <aside class="artifacts-panel" id="artifactsPanel" aria-label="Трекер артефактов"></aside>
+</div>
+
+<footer class="app-footer" id="appFooter"><!-- rendered by JS: safety list + responsibility text (bilingual) --></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

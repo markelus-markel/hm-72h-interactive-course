@@ -1,0 +1,17 @@
+﻿# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary / backup files
+*.tmp
+*.bak
+*.log
+*~
+index (1).html
+
+# Archives
+*.zip
+*.rar
+*.7z
