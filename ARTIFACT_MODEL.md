@@ -8,7 +8,10 @@ Final student artifacts:
 - таблица «система → компонент»;
 - минимум 3 карточки дефекта;
 - Photo-ID;
-- дефектная ведомость;
+- дефектная ведомость — **v2.0: now auto-advances from the real saved defect cards** (SUBMITTED
+  once ≥3 cards exist, same threshold as the defectCards artifact/Gate G6), instead of only a
+  manual status dropdown on SCR-12 disconnected from the actual table shown there. The dropdown
+  stays available as a teacher override; see "What changed (v2.0)";
 - учебный проект технического акта;
 - нейтральное сообщение ответственному лицу;
 - safety-log;

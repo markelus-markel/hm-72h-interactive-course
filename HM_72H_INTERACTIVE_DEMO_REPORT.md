@@ -1,7 +1,41 @@
-# HM_72H Interactive Course Demo — Implementation Report v1.7
+# HM_72H Interactive Course Demo — Implementation Report v2.0
 
 ## Changelog
 
+- **v2.0 (gate-advance consistency + teacher field-practice review):** An independent QA pass
+  (a Playwright "student simulator" playing the full course realistically, cross-checked
+  against `app.js` source) surfaced three gate/artifact design gaps, all addressed here:
+  1. **Gates G1–G5 now auto-advance to PASS** from the student action that completes them
+     (G1 object chosen, G2 zone chosen, G3 component identified, G4 visible sign recorded, G5
+     Photo-ID linked — both the gallery pick and the local-file upload path), matching the
+     existing auto-suggestion pattern already used by G0/G6/G7/G8/G10. Manual
+     PASS/REDO/BLOCKED/STOP buttons remain on every gate as before, unchanged.
+  2. **"Дефектная ведомость" (SCR-12) now tracks real content.** Its artifact status used to
+     be driven only by a manual dropdown on SCR-12, completely disconnected from the actual
+     cards table shown on that same screen — meaning Gate G8 (SCR-13) could PASS from a single
+     dropdown click regardless of whether any real defect cards existed. It now auto-advances
+     to SUBMITTED once ≥3 cards are saved (same threshold as the `defectCards` artifact/Gate
+     G6), set in `submitDefectCard()`. The dropdown stays as a manual override.
+  3. **New "Полевая практика — проверка задания" card in the teacher panel** — shows the
+     student's submitted field-task reference, the `fieldEvidence` artifact status, and Gate
+     G9's own PASS/REDO/BLOCKED/STOP controls, all in one place, so a teacher reviewing the
+     real-world field work doesn't need to navigate to the student's SCR-14. This does **not**
+     remove the student's own ability to self-click Gate G9 (or any gate) — that broader
+     "which gates should be teacher-only" question was explicitly scoped out as a separate,
+     bigger decision (would mean role-based UI, not just this additive card).
+  See "What changed (v2.0)" below. `student_simulator.js` and `qa_findings_report.md` (QA
+  tooling/report, not shipped as course content) ran clean (106/106) after this round.
+- **v1.9 (bugfixes: stop_now inconsistency, phone overflow):** Fixed two concrete bugs found
+  by the same QA pass: choosing "Остановиться и не продолжать (STOP)" as a defect card's
+  action (SCR-09) now correctly triggers the full STOP overlay, matching the identical choice
+  on SCR-11 (previously it silently saved with no safety effect); and `.module-chip` no longer
+  overflows the viewport by 30-38px at phone width (390px) on every module-labeled screen
+  (added a `max-width:600px` wrap override) — the existing smoke tests only checked
+  1440px/820px, which is why this went undetected until now.
+- **v1.8 (STOP button clarity):** Added a short visible hint next to the header "Симулировать
+  STOP" button (RU+KZ) clarifying it's a demo-only safety-stop simulation, not a real alert —
+  previously this was explained only in a hover tooltip, easy to miss. Also reduced the
+  button's vertical padding (~20% shorter) per request. No action/state logic changed.
 - **v1.7 (dedicated field-practice screen + Gate):** Promotes the v1.6 field-task block from
   an inline block on the итоговый пакет screen into its own screen and Gate — the heavier
   option explicitly deferred in v1.6's "Scope decisions" ("it would renumber the course's
@@ -149,17 +183,23 @@ G0–G10 are all present as visible control points, each tied to the screen name
 
 - G0 (role/safety) — SCR-02, auto-set to PASS when the safety checkbox is confirmed (also
   settable manually)
-- G1 (object/simulation selected) — SCR-03
-- G2 (zone selected) — SCR-04
-- G3 (system + component identified) — SCR-06
-- G4 (visible sign recorded) — SCR-07
-- G5 (Photo-ID linked) — SCR-08
+- G1 (object/simulation selected) — SCR-03, auto-set to PASS when an object/case is chosen
+  (**v2.0**)
+- G2 (zone selected) — SCR-04, auto-set to PASS once at least one zone is chosen (**v2.0**)
+- G3 (system + component identified) — SCR-06, auto-set to PASS when a component is chosen
+  (**v2.0**)
+- G4 (visible sign recorded) — SCR-07, auto-set to PASS when a visible sign is chosen (**v2.0**)
+- G5 (Photo-ID linked) — SCR-08, auto-set to PASS when a Photo-ID is chosen or uploaded
+  (**v2.0**)
 - G6 (defect card completed) — SCR-09, auto-set to PASS on first saved card
 - G7 (risk + safe action defined) — SCR-11, auto-set to PASS when a neutral message is saved
   with both a risk and an action chosen
 - G8 (defect statement assembled) — SCR-13, auto-set to PASS when the act draft is saved
+  (depends on the "дефектная ведомость" artifact no longer being NOT_STARTED, which as of
+  **v2.0** itself auto-advances from ≥3 real saved cards — see Artifact tracker below)
 - G9 (field practice confirmed) — **SCR-14 (v1.7)**, set to PASS/REDO/BLOCKED/STOP manually
-  by the teacher/master after reviewing the student's submitted field-task reference
+  by the teacher/master after reviewing the student's submitted field-task reference; **v2.0**
+  added a dedicated review card for this in the teacher panel (see "Teacher view" below)
 - G10 (final package ready for defense) — SCR-16 (shifted from SCR-15 in v1.7, was G9 before
   v1.7), set to PASS when "защита пройдена" is confirmed
 
@@ -176,8 +216,10 @@ All 13 required artifacts (карта зон, маршрутный чек-лис
 are listed in the always-visible right-hand panel, each with a status dropdown
 (NOT STARTED / DRAFT / SUBMITTED / PASS / REDO / BLOCKED). Several artifacts auto-update their
 status as the student progresses (e.g. selecting a zone moves the route checklist to DRAFT/
-SUBMITTED, saving 3+ defect cards moves the defect-cards artifact to SUBMITTED); every status
-can also be changed manually at any time.
+SUBMITTED, saving 3+ defect cards moves the defect-cards artifact to SUBMITTED, and — as of
+**v2.0** — the same ≥3-card save also moves "дефектная ведомость" to SUBMITTED, since it is the
+compiled table of those same cards); every status can also be changed manually at any time,
+including on artifacts that now auto-advance.
 
 ## Defect card, Photo-ID, and risk demos
 
@@ -202,8 +244,12 @@ can also be changed manually at any time.
 - SCR-02 additionally shows the student-role explanation and full safety list, with a
   confirmation checkbox.
 - A "Симулировать STOP" button is available both in the header (every screen) and on SCR-02,
-  and choosing "Остановиться и не продолжать (STOP)" as a safe action on SCR-11 also triggers
-  it. Triggering STOP shows a full-screen red overlay explaining the safety boundary and
+  with a short visible hint next to the header one (**v1.8**) clarifying it's a demo
+  simulation, not a real alert. Choosing "Остановиться и не продолжать (STOP)" as a safe
+  action on SCR-11, or as a defect card's action dropdown value on SCR-09 (fixed to match
+  SCR-11 in **v1.9** — it previously silently saved with no safety effect from SCR-09), also
+  triggers it. Triggering STOP shows a full-screen red overlay explaining the safety boundary
+  and
   disables all navigation, gate/artifact controls, and form actions underneath it — the only
   working control is "Сбросить демо (Reset)".
 - Setting any Gate's status to STOP (via its status buttons) also triggers the same overlay,
@@ -217,8 +263,12 @@ can also be changed manually at any time.
 
 A "Режим преподавателя" toggle in the header shows/hides a dashboard panel (visible above the
 main content on every screen while active) summarizing: overall readiness %, defect-card
-count, risk-level distribution, a BLOCKED/STOP alert when relevant, and full tables of all 10
-gate statuses and all 12 artifact statuses.
+count, risk-level distribution, a BLOCKED/STOP alert when relevant, and full tables of all 11
+gate statuses and all 13 artifact statuses. **v2.0** added a third, full-width card,
+"Полевая практика — проверка задания": the student's submitted field-task reference, the
+`fieldEvidence` artifact status, and Gate G9's own controls, all in one place — so reviewing
+and acting on the field-practice step no longer requires leaving the teacher panel to visit
+the student's SCR-14.
 
 ## Persistence
 
@@ -571,6 +621,65 @@ after discussing both the lighter (3A, shipped as v1.6) and heavier (3B/"Option 
   records a reference string in the browser.
 - The real-app terminology bridge (v1.5) and the zone-map SVG diagram (v1.6, on SCR-03/
   SCR-04) are untouched by this change.
+
+## What changed (v2.0 gate-advance consistency + teacher field-practice review)
+
+An independent QA pass — `student_simulator.js` (Playwright) playing the full course exactly
+as a real student would, every finding cross-checked directly against `app.js` source before
+being acted on — found three gate/artifact design gaps, all fixed here. (Two separate,
+simpler bugs the same pass found — the SCR-09 stop_now inconsistency and the 390px phone
+overflow — were already fixed in v1.9.)
+
+**1. Gates G1–G5 now auto-advance**
+
+- Before: G1 (object), G2 (zone), G3 (system+component), G4 (visible sign), and G5 (Photo-ID)
+  had no auto-PASS logic at all — unlike G0/G6/G7/G8/G10, which all auto-advance from a real
+  student action. A student doing everything correctly would see roughly half the gate row
+  stuck at "Не начато" with nothing indicating that was expected; the only path was the
+  generic manual 6-button row every gate already exposes.
+- Now: `select-object` sets G1, `toggle-zone` sets G2 (once ≥1 zone is chosen), `select-
+  component` sets G3, `select-symptom` sets G4, and `select-photo` **and** the local-file
+  upload path both set G5 — each to PASS, matching the one-directional "moves forward, never
+  auto-reverts" pattern G0 already used (a teacher's manual REDO/BLOCKED is not auto-
+  overwritten except by the same re-fire behavior every other auto-gate already has, e.g.
+  saving another defect card re-asserts G6 = PASS the same way).
+- The manual PASS/REDO/BLOCKED/STOP buttons stay on every gate, unchanged — this is purely
+  additive auto-suggestion logic, not a removal of manual control.
+
+**2. "Дефектная ведомость" (SCR-12) now tracks real content**
+
+- Before: the `defectStatement` artifact's only status source was a manual `<select>`
+  dropdown on SCR-12, with zero connection to the actual defect-cards table shown on that
+  same screen. Since Gate G8 (SCR-13) auto-passes once `defectStatement !== NOT_STARTED`, a
+  student could flip that one dropdown and pass G8 regardless of whether the ведомость
+  reflected any real cards — the only artifact in the whole model not wired to the work it
+  summarizes.
+- Now: `submitDefectCard()` also sets `defectStatement` to SUBMITTED once ≥3 cards exist
+  (DRAFT below that), the same real-content threshold already used for the `defectCards`
+  artifact itself. The dropdown on SCR-12 remains, as a manual override only.
+
+**3. New teacher-panel "Полевая практика — проверка задания" card**
+
+- SCR-14 (field practice, v1.7) already lets a teacher PASS/REDO/BLOCK/STOP Gate G9 from the
+  student's own screen; the gap was that reviewing it meant navigating there and reading the
+  reference inline with the student's view.
+- Added a third, full-width card to the teacher panel (`renderTeacherPanel()`) showing the
+  submitted reference (`state.fieldTaskRef`, or an explicit "— ещё не отправлено —" when
+  empty), the `fieldEvidence` artifact status, and Gate G9's own six-button control row
+  (reusing the existing `gateBlock("G9")` — no new gate logic, no new state).
+- **Deliberately not addressed here:** a student can still self-click any gate's PASS button,
+  including G9, with no role-based restriction anywhere in the app — the QA pass flagged this
+  as a broader "should the UI distinguish teacher-only gates from self-advancing ones"
+  question, discussed and explicitly deferred as a separate, heavier decision (role-based
+  rendering, not just an additive card) rather than folded into this round.
+
+**Verification**
+
+- `smoke_check.js` (12/12) and `smoke_check_v16.js` (20/20) both pass unchanged.
+- `student_simulator.js` was updated alongside the fixes (its G1–G5 probes, the
+  defectStatement-dropdown probe, and the artifact-card CSS selector — which needed updating
+  once a 3rd `.teacher-card` existed — all now assert the corrected behavior) and runs
+  106/106 clean, 0 console/page errors.
 
 ## Scope confirmation
 

@@ -257,6 +257,9 @@
     teacherHeading: "Режим преподавателя — сводка прогресса группы/студента (демо)",
     teacherGatesHeading: "0–10", teacherArtifactsHeading: "Артефакты",
     teacherWarn: "Обнаружены BLOCKED/STOP статусы — требуется внимание преподавателя",
+    teacherFieldPracticeHeading: "Полевая практика — проверка задания",
+    teacherFieldPracticeRefLabel: "Референс от студента (протокол/файл):",
+    teacherFieldPracticeNoRef: "— ещё не отправлено —",
     footerSafetyTitle: "Safety — правила безопасности студента",
     footerSafetyList: [
       "не открывать электрощиты;", "не трогать трубы, кабели, вентили, насосы, счётчики;",
@@ -297,6 +300,9 @@
     teacherHeading: "Оқытушы режимі — топ/студент прогресінің жиынтығы (демо)",
     teacherGatesHeading: "0–10", teacherArtifactsHeading: "Артефактілер",
     teacherWarn: "BLOCKED/STOP мәртебелері анықталды — оқытушының назары қажет",
+    teacherFieldPracticeHeading: "Далалық практика — тапсырманы тексеру",
+    teacherFieldPracticeRefLabel: "Студенттің сілтемесі (хаттама/файл):",
+    teacherFieldPracticeNoRef: "— әлі жіберілмеген —",
     footerSafetyTitle: "Safety — студенттің қауіпсіздік ережелері",
     footerSafetyList: [
       "электр щиттерін ашпау;", "құбырларды, кабельдерді, вентильдерді, сорғыларды, есептеуіштерді ұстамау;",
@@ -955,6 +961,12 @@
       '<div class="teacher-grid">' +
       '<div class="teacher-card"><h4>' + escapeHtml(t("ui.gateTerm")) + " " + escapeHtml(t("ui.teacherGatesHeading")) + "</h4>" + gatesHtml + "</div>" +
       '<div class="teacher-card"><h4>' + escapeHtml(t("ui.teacherArtifactsHeading")) + "</h4>" + artifactsHtml + "</div>" +
+      '<div class="teacher-card teacher-card-wide"><h4>' + escapeHtml(t("ui.teacherFieldPracticeHeading")) + "</h4>" +
+      '<div class="teacher-mini-row"><span>' + escapeHtml(t("ui.teacherFieldPracticeRefLabel")) + "</span><strong>" +
+      escapeHtml(state.fieldTaskRef || t("ui.teacherFieldPracticeNoRef")) + "</strong></div>" +
+      '<div class="teacher-mini-row"><span>' + escapeHtml(t("artifacts.fieldEvidence")) + "</span>" + tag(state.artifacts.fieldEvidence) + "</div>" +
+      gateBlock("G9") +
+      "</div>" +
       "</div>";
     panel.innerHTML = html;
   }
@@ -1428,6 +1440,7 @@
       case "select-object":
         state.objectType = el.getAttribute("data-object");
         state.artifacts.zoneMap = state.zones.length ? "SUBMITTED" : "DRAFT";
+        state.gates.G1 = "PASS";
         render();
         break;
 
@@ -1440,6 +1453,7 @@
         // becomes a real completed artifact once both an object/case AND at least one zone
         // are chosen, matching ARTIFACT_MODEL.md listing it as its own deliverable.
         state.artifacts.zoneMap = state.objectType ? (state.zones.length ? "SUBMITTED" : "DRAFT") : "NOT_STARTED";
+        if (state.zones.length) state.gates.G2 = "PASS";
         render();
         break;
       }
@@ -1454,12 +1468,14 @@
       case "select-component":
         state.selectedComponentId = el.getAttribute("data-component");
         state.artifacts.sysCompTable = "SUBMITTED";
+        state.gates.G3 = "PASS";
         render();
         break;
 
       case "select-symptom":
         state.selectedSymptomId = el.getAttribute("data-symptom");
         state.artifacts.defectCards = state.artifacts.defectCards === "NOT_STARTED" ? "DRAFT" : state.artifacts.defectCards;
+        state.gates.G4 = "PASS";
         render();
         break;
 
@@ -1467,6 +1483,7 @@
         state.selectedPhoto = el.getAttribute("data-photo");
         state.uploadedPhotoDataUrl = null;
         state.artifacts.photoId = "SUBMITTED";
+        state.gates.G5 = "PASS";
         render();
         break;
 
@@ -1557,6 +1574,7 @@
         state.uploadedPhotoDataUrl = ev.target.result;
         state.selectedPhoto = null;
         state.artifacts.photoId = "SUBMITTED";
+        state.gates.G5 = "PASS";
         render();
       };
       reader.readAsDataURL(file);
@@ -1616,6 +1634,10 @@
     if (actionChoice) state.selectedAction = actionChoice;
 
     state.artifacts.defectCards = state.defectCards.length >= 3 ? "SUBMITTED" : "DRAFT";
+    // "Дефектная ведомость" (SCR-12) IS the compiled table of saved defect cards — so it
+    // should track the same real content, not only the separate manual status dropdown
+    // shown on SCR-12 (which stays available for a teacher to override).
+    state.artifacts.defectStatement = state.defectCards.length >= 3 ? "SUBMITTED" : (state.defectCards.length ? "DRAFT" : state.artifacts.defectStatement);
     state.gates.G6 = "PASS";
     render();
   }
