@@ -1615,6 +1615,10 @@
     var actionChoice = (document.getElementById("cardActionInput") || {}).value || "";
     var status = (document.getElementById("cardStatusInput") || {}).value || "DRAFT";
 
+    // Same rule as the SCR-11 safe-action chips: choosing "stop_now" halts the course
+    // immediately rather than being saved as an ordinary card action.
+    if (actionChoice === "stop_now") { triggerStop("defect-card-action-choice"); return; }
+
     var card = {
       id: "DC-" + String(state.cardIdCounter).padStart(3, "0"),
       zoneIds: state.zones.slice(),

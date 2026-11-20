@@ -395,6 +395,7 @@ table.data-table th{background:#f4f6f8;font-size:11px;text-transform:uppercase;l
   .brand-subtitle{display:none;}
   .screen-card{padding:14px;}
   .kz-draft-note{max-width:100%;}
+  .module-chip{white-space:normal;max-width:100%;}
 }
 
 /* ---------- Print (demo handouts) ---------- */
