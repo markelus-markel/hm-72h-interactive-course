@@ -1,7 +1,28 @@
-# HM_72H Interactive Course Demo — Implementation Report v2.0
+# HM_72H Interactive Course Demo — Implementation Report v2.1
 
 ## Changelog
 
+- **v2.1 (anglicism removal):** By explicit request, removed the remaining bare-English UI
+  terms across both RU and KZ — these had been a deliberate "fixed-term" decision since v1.1/
+  v1.2, now reversed. Three categories, all addressed: (1) gate/artifact status words
+  PASS/REDO/BLOCKED/STOP, now fully localized (RU: Принято/На доработку/Заблокировано/Стоп;
+  KZ: Қабылданды/Түзету/Бұғатталды/Тоқтатылды) wherever they appeared as display text — status
+  tags, the header "Gate PASS N/11" chip (now wired to a proper localized string instead of a
+  hardcoded English literal), the teacher-panel warning, the readiness text on SCR-16, button
+  labels/captions referencing STOP, and the risk-level word BLOCKED; (2) the word "Gate" itself
+  (RU "Контрольная точка", KZ "Бақылау нүктесі") and "Gate-log" (RU "Журнал контрольных точек",
+  KZ "Бақылау нүктелерінен өту журналы" / "Бақылау нүктелерінің журналы"); (3) "Photo-ID" (→
+  "Фотоидентификатор", RU and KZ, across ~10 locations: screen titles, gate G5 description,
+  artifact name, SCR-07/08 prose, SCR-09 fields/table headers), "Reset demo" (→ "Сбросить
+  демо"/"Демоны қалпына келтіру"), and "HTML demo" (→ "веб-демонстрация"/"веб-көрсетілім" on
+  SCR-01 and in the footer responsibility text). Internal state/enum keys (`GATES_DEF`,
+  `GATE_STATUSES`, `state.gates.G1 = "PASS"`, CSS classes like `.tag-PASS`, `data-status="PASS"`
+  attributes) are unchanged — none of these are ever shown to the user, only the display text
+  rendered through `t("status."+key)` was. `selfReport`/"Self-report" and `safetyLog`/"safety-
+  log" were explicitly out of scope for this round (not selected) and remain untouched. See
+  "What changed (v2.1)" below. All three QA scripts updated for the new localized display text
+  and re-run clean: `smoke_check.js` (12/12), `smoke_check_v16.js` (20/20),
+  `student_simulator.js` (106/106, 0 console/page errors).
 - **v2.0 (gate-advance consistency + teacher field-practice review):** An independent QA pass
   (a Playwright "student simulator" playing the full course realistically, cross-checked
   against `app.js` source) surfaced three gate/artifact design gaps, all addressed here:
@@ -680,6 +701,71 @@ overflow — were already fixed in v1.9.)
   defectStatement-dropdown probe, and the artifact-card CSS selector — which needed updating
   once a 3rd `.teacher-card` existed — all now assert the corrected behavior) and runs
   106/106 clean, 0 console/page errors.
+
+## What changed (v2.1 anglicism removal)
+
+By explicit user request, swept `app.js` for the English/anglicism terms that had been a
+deliberate, documented "fixed-term list" since v1.1/v1.2 ("confirmed with the requester" at the
+time) — that earlier decision is now explicitly reversed for three named categories.
+
+**1. Status words PASS / REDO / BLOCKED / STOP**
+
+- `STR.ru.status` / `STR.kz.status` (and `STR.ru.risk` / `STR.kz.risk`'s BLOCKED entry) now
+  hold fully localized words instead of the bare English enum name: RU Принято / На доработку /
+  Заблокировано / Стоп; KZ Қабылданды / Түзету / Бұғатталды / Тоқтатылды. Since every gate/
+  artifact tag renders through `tag(status)` → `t("status."+status)`, this alone relocalized
+  every status badge across the whole app with one change per language.
+- Every place that previously spelled the English word directly in prose or a label was
+  reworded: the header's gate-progress chip (previously a hardcoded `'Gate PASS ' + count`
+  string, now `t("ui.gatePassChipLabel")` + count — RU "Принято точек", KZ "Қабылданған
+  нүктелер"), the teacher-panel warning banner, the SCR-16 readiness/not-ready text, the
+  STOP-related button labels/captions/explanations (`stopTitle`, `stopCheckLabel`,
+  `stopCheckText`, `stopBtn`, `safeActions.stop_now`, the risk-explanation and
+  warnHighBlocked strings, the footer safety-rules list item), and the `statusLegend` string.
+- Internal code — `GATE_STATUSES`/`ARTIFACT_STATUSES` arrays, `state.gates.G1 = "PASS"` etc.,
+  the `tag-PASS`/`tag-REDO`/… CSS classes, and `data-status="PASS"` button attributes — is
+  unchanged; these are never shown to the user and the display text was always a separate
+  `t("status."+key)` lookup layered on top.
+
+**2. The word "Gate"**
+
+- `ui.gateTerm` (used by `gateBlock()` for every per-gate heading, and by the teacher panel's
+  gates-card heading) changed from "Gate (контрольная точка)" / "Gate (бақылау нүктесі)" to
+  plain "Контрольная точка" / "Бақылау нүктесі" — dropping the English word entirely rather
+  than keeping it as a parenthetical gloss.
+- `gateLog` (artifact display name) and `gateLogTableLabel` (SCR-15's gate-log table heading)
+  both dropped "Gate-log" for "Журнал контрольных точек" / "Бақылау нүктелерінің журналы"
+  (RU/KZ, worded slightly differently between the two to read naturally in each language).
+  `selfReport`/"Self-report" was **not** in scope for this round and is unchanged.
+
+**3. "Photo-ID", "Reset demo", "HTML demo"**
+
+- "Photo-ID" → "Фотоидентификатор" (RU and KZ, identical spelling in both since it's a compound
+  technical term) at every occurrence: the SCR-08 screen title, Gate G5's description, the
+  `photoId` artifact name, SCR-07's next-hint, SCR-08's explanation text, and SCR-09's
+  `fields.photo`/`tableHeaders.photo` strings.
+- `resetBtnLabel`/`resetBtnTitle` ("Reset demo") → "Сбросить демо" / "Сброс демонстрации"
+  (RU, already localized) and "Демоны қалпына келтіру" / "Демонстрацияны бастапқы күйге
+  қайтару" (KZ, newly localized — previously left as the literal English phrase).
+- "HTML demo (интерактивная демонстрация)" → "веб-демонстрация"/"веб-көрсетілім" on SCR-01's
+  intro text and in the footer responsibility paragraph, both languages. "LMS", "бэкенд", and
+  "production" in the same sentences were **not** touched — not part of the requested scope.
+
+**Verification**
+
+- `node -c app.js` passes (syntax-only check, no app.js logic changed in this round — purely
+  string-literal and one `t()`-wiring edit for the header chip).
+- Visual check at desktop width (RU and KZ) and at 390px phone width confirms no layout
+  overflow from the longer Russian/Kazakh replacement words (e.g. "Принято точек" / "Қабылданған
+  нүктелер" chips, "Контрольная точка" vs the old "Gate N").
+- All three QA scripts were updated for the new display text and re-run clean:
+  `smoke_check.js` (12/12 — one check's RU/KZ-comparison logic was also fixed, since it was
+  comparing the *same* literal English word across both languages before, which no longer
+  holds now that the word itself is localized per-language), `smoke_check_v16.js` (20/20,
+  needed no changes — its one SUBMITTED-text check already had a CSS-class fallback),
+  `student_simulator.js` (106/106, 0 console/page errors — updated every `.trim() === 'PASS'`-
+  style assertion, the KZ-context self-pass check, the HIGH-risk STOP-text check, and the
+  teacher-panel pass-count regex to match the new localized words).
 
 ## Scope confirmation
 
