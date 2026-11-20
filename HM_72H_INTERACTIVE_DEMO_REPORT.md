@@ -1,7 +1,13 @@
-# HM_72H Interactive Course Demo — Implementation Report v1.3
+# HM_72H Interactive Course Demo — Implementation Report v1.4
 
 ## Changelog
 
+- **v1.4 (UI/UX polish):** A visual/readability-only pass over the v1.3 bilingual demo, aimed
+  at making it easier to demonstrate to a director, methodist, teacher, or student group. No
+  screen was added or removed, no Gate↔screen mapping changed, no artifact logic changed, and
+  no course content changed — every edit is CSS, plus a handful of small HTML-structure/markup
+  tweaks in `app.js`'s rendering functions (grouping, wrapper classes) needed to hang the new
+  styles on. See "What changed (v1.4 UI/UX polish)" below for the full list.
 - **v1.3 (RU/KZ bilingual mode):** Implemented a full RU/KZ bilingual interface on top of the
   v1.2 baseline. Added a "Рус / Қаз" language switcher in the header. Extracted essentially all
   visible UI strings — screen titles/explanations/tasks, module names, gate names, artifact
@@ -304,6 +310,55 @@ DRAFT / NEEDS HUMAN LANGUAGE REVIEW. All Kazakh strings are first-draft translat
 for this task; they have not been reviewed by a native Kazakh-speaking methodologist. This is
 flagged directly in the running UI (see "KZ draft notice" above) and is not hidden or
 suppressed anywhere.
+
+## What changed (v1.4 UI/UX polish)
+
+- **Header clarity:** the header status row is now split into a clear "where am I" group
+  (current screen name + position, course hours/modules chip) and a "how ready am I" group
+  (Gate PASS count, readiness %, a BLOCKED/STOP warning chip when relevant), with the progress
+  bar spanning the full header width below both. The action row is split into a language
+  cluster (switcher + draft-status note) and a session-controls cluster (persist toggle,
+  teacher toggle, STOP, Reset), separated by a thin divider so the two purposes don't blur
+  together. The teacher toggle now shows a small status dot and a highlighted "on" state so
+  it's obvious at a glance whether teacher mode is active.
+- **Language switcher:** unchanged in behavior; visual contrast of the active language button
+  increased slightly and its minimum width fixed so RU/KZ labels don't shift the layout.
+- **Sidebar navigation:** the active screen now also gets a left accent bar (in addition to
+  its existing highlight) so it's unmistakable even at a glance; long module labels and screen
+  titles now wrap gracefully instead of relying on the container to clip or overflow them.
+- **Main content readability:** every screen's "student task" block now has a light green
+  tint and left accent, visually distinct from plain explanatory blocks (previously all blocks
+  looked identical regardless of role) — done via a new `taskBlock()` render helper alongside
+  the existing `block()` helper, no content changed.
+- **Artifact tracker:** artifact names now wrap gracefully instead of crowding their status
+  tag; the tag is pinned to the top-right of its row so long names never push it out of line
+  or make it look like a broken/overlapping badge; status dropdowns are full-width and aligned.
+- **Gate area:** the "Gate (контрольная точка/бақылау нүктесі)" title, gate buttons, and
+  PASS/REDO/BLOCKED/STOP tag colors are unchanged; the previously-repeated status legend under
+  every single gate box is now visually de-emphasized (smaller, muted, prefixed with an "ⓘ")
+  so it reads as a quiet reference rather than repeated noise, while remaining present and
+  readable everywhere it was before.
+- **STOP overlay:** unchanged in behavior and tone (still a serious, unmissable full-screen
+  block, still cleared only by Reset demo) — no styling changes were needed here, since it was
+  already scoped to appear only while STOP is actually active.
+- **Defect card (SCR-09):** the Fact and Hypothesis textareas now carry a subtle green vs.
+  amber tint (matching the existing fact/hypothesis callout colors used elsewhere), so the
+  fact-vs-hypothesis distinction is visible in the form itself, not only in the explanatory
+  text above it.
+- **Teacher mode:** the panel now has a graduation-cap heading icon and a slightly stronger
+  top border/inset shadow, reinforcing that it is a distinct "teacher dashboard" mode layered
+  over the student flow rather than part of it — no data or layout structure changed.
+- **Responsive layout:** re-verified at 1440px and 820px; a couple of small tablet-width fixes
+  (nav-item title no longer wraps awkwardly in the horizontal tablet sidebar; the header
+  actions divider hides itself when the header wraps to multiple lines; the KZ draft note
+  takes full width on narrow screens instead of clipping).
+- **Print CSS (new, low-risk):** printing now hides the header, sidebar, artifacts panel,
+  teacher panel, STOP overlay, nav buttons, and the gate legend hint, leaving just the current
+  screen's content and the footer — useful for a quick paper handout of one screen at a time.
+  This is a CSS-only addition; there is no new export/PDF feature.
+- No screen was added/removed, no Gate↔screen mapping changed, no artifact tracker logic
+  changed, no internal state model changed, no course methodology or safety/responsibility
+  semantics changed, and no backend/LMS/PWA/login/database/package/API was introduced.
 
 ## Scope confirmation
 

@@ -737,7 +737,7 @@
       '<div class="gate-box-title">' + escapeHtml(t("ui.gateTerm")) + " " + gateId.replace("G", "") + " — " + escapeHtml(t("gates." + gateId)) +
       " " + tag(state.gates[gateId]) + "</div>" +
       '<div class="gate-btn-row">' + gateStatusButtons(gateId) + "</div>" +
-      '<div class="next-hint" style="margin-top:8px;">' + escapeHtml(t("ui.statusLegend")) + "</div>" +
+      '<div class="status-legend-hint">ⓘ ' + escapeHtml(t("ui.statusLegend")) + "</div>" +
       "</div>"
     );
   }
@@ -765,33 +765,46 @@
       ? '<div class="kz-draft-note">' + escapeHtml(t("ui.kzDraftNote")) + "</div>"
       : '<div class="kz-draft-note kz-draft-note-ru">' + escapeHtml(STR.ru.ui.kzDraftNote) + "</div>";
 
+    var teacherActive = state.teacherView ? " active" : "";
     document.getElementById("headerActions").innerHTML =
+      '<div class="header-actions-group lang-group">' +
       '<div class="lang-switch" role="group" aria-label="' + escapeHtml(t("ui.langSwitchTitle")) + '">' +
       '<button type="button" class="btn btn-sm lang-btn' + (state.lang === "ru" ? " active" : "") + '" data-action="set-lang" data-lang="ru">' + escapeHtml(t("ui.langRuLabel")) + "</button>" +
       '<button type="button" class="btn btn-sm lang-btn' + (state.lang === "kz" ? " active" : "") + '" data-action="set-lang" data-lang="kz">' + escapeHtml(t("ui.langKzLabel")) + "</button>" +
       "</div>" +
       draftNote +
+      "</div>" +
+      '<div class="header-actions-divider" aria-hidden="true"></div>' +
+      '<div class="header-actions-group session-group">' +
       '<label class="persist-toggle" title="' + escapeHtml(t("ui.persistTitle")) + '">' +
       '<input type="checkbox" id="persistToggle"' + (persistChecked ? " checked" : "") + ">" +
       escapeHtml(t("ui.persistLabel")) +
       "</label>" +
-      '<button type="button" class="btn btn-outline" data-action="toggle-teacher" id="teacherToggleBtn">' + escapeHtml(state.teacherView ? t("ui.teacherBtnOn") : t("ui.teacherBtnOff")) + "</button>" +
+      '<button type="button" class="btn btn-outline btn-teacher' + teacherActive + '" data-action="toggle-teacher" id="teacherToggleBtn">' +
+      '<span class="teacher-dot" aria-hidden="true"></span>' + escapeHtml(state.teacherView ? t("ui.teacherBtnOn") : t("ui.teacherBtnOff")) + "</button>" +
       '<button type="button" class="btn btn-stop" data-action="trigger-stop" data-source="header" title="' + escapeHtml(t("ui.stopBtnTitle")) + '">' + escapeHtml(t("ui.stopBtnLabel")) + "</button>" +
-      '<button type="button" class="btn btn-outline" data-action="reset-demo" title="' + escapeHtml(t("ui.resetBtnTitle")) + '">' + escapeHtml(t("ui.resetBtnLabel")) + "</button>";
+      '<button type="button" class="btn btn-outline" data-action="reset-demo" title="' + escapeHtml(t("ui.resetBtnTitle")) + '">' + escapeHtml(t("ui.resetBtnLabel")) + "</button>" +
+      "</div>";
   }
 
   function renderHeader() {
     var pct = Math.round((gatesPassCount() / GATES_DEF.length) * 100);
     var screenNo = state.screenIdx + 1;
+    var readinessWord = state.lang === "kz" ? "қорғауға дайындық" : "готовности к защите";
+    var warnChip = anyStopOrBlocked() ? '<span class="meta-chip meta-chip-warn">⚠ ' + escapeHtml(t("ui.warningChip")) + "</span>" : "";
     var html =
       '<div class="status-row">' +
+      '<div class="status-primary">' +
+      '<span class="status-screen-label">' + escapeHtml(t("screens." + SCREENS[state.screenIdx].scr)) + " · " + screenNo + "/" + SCREENS.length + "</span>" +
       '<span class="meta-chip">' + escapeHtml(t("ui.hoursModulesChip")) + "</span>" +
-      '<span class="meta-chip">' + escapeHtml(t("screens." + SCREENS[state.screenIdx].scr)) + " — " + screenNo + "/" + SCREENS.length + "</span>" +
-      '<span class="meta-chip">Gate PASS: ' + gatesPassCount() + "/" + GATES_DEF.length + "</span>" +
-      (anyStopOrBlocked() ? '<span class="meta-chip" style="background:#fdf3f2;color:#c0392b;border-color:#f0c4bd;">' + escapeHtml(t("ui.warningChip")) + "</span>" : "") +
-      '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
-      "<span>" + pct + "% " + (state.lang === "kz" ? "қорғауға дайындық" : "готовности к защите") + "</span>" +
-      "</div>";
+      "</div>" +
+      '<div class="status-secondary">' +
+      '<span class="meta-chip meta-chip-gate">Gate PASS ' + gatesPassCount() + "/" + GATES_DEF.length + "</span>" +
+      '<span class="meta-chip meta-chip-readiness">' + pct + "% " + escapeHtml(readinessWord) + "</span>" +
+      warnChip +
+      "</div>" +
+      "</div>" +
+      '<div class="progress-track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
     document.getElementById("headerStatus").innerHTML = html;
   }
 
@@ -941,6 +954,13 @@
     return '<div class="block"><div class="block-label">' + escapeHtml(label) + '</div><div class="block-body">' + bodyHtml + "</div></div>";
   }
 
+  // Same as block(), with a visual "this is what the student must do" treatment —
+  // used at every screen's student-task block so it reads as distinct from plain
+  // explanatory text (UI/UX-only distinction; no change in meaning or logic).
+  function taskBlock(label, bodyHtml) {
+    return '<div class="block block-task"><div class="block-label">' + escapeHtml(label) + '</div><div class="block-body">' + bodyHtml + "</div></div>";
+  }
+
   var SCREEN_RENDERERS = [];
 
   // SCR-01 — Старт курса
@@ -954,7 +974,7 @@
       block(s.descLabel, "<p>" + s.desc + "</p>") +
       block(s.structureLabel, '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">' + modulesHtml + "</div>") +
       block(s.balanceLabel, '<div class="chips-row"><span class="meta-chip">' + s.theory + ": " + hb.theory + " " + t("ui.hourUnit") + '</span><span class="meta-chip">' + s.practice + ": " + hb.practice + " " + t("ui.hourUnit") + '</span><span class="meta-chip">' + s.digital + ": " + hb.digital + " " + t("ui.hourUnit") + '</span><span class="meta-chip">' + s.field + ": " + hb.field + " " + t("ui.hourUnit") + "</span></div>") +
-      block(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p>") +
+      taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p>") +
       block(s.artifactLabel, "<p>" + escapeHtml(s.artifactNone) + "</p>") +
       block(s.demoLabel, '<p class="callout">' + s.demoText + "</p>");
     return screenShell(0, body, { nextHint: s.nextHint });
@@ -968,7 +988,7 @@
     var body =
       block(s.roleLabel, "<p>" + s.role + "</p>") +
       block(s.safetyLabel, '<div class="callout safety"><ul>' + safetyItems + "</ul></div>") +
-      block(s.taskLabel, '<label style="display:flex;align-items:flex-start;gap:8px;font-size:13.5px;"><input type="checkbox" id="safetyCheckbox" ' + (state.safetyAccepted ? "checked" : "") + ' data-action="toggle-safety" style="width:auto;margin-top:3px;"> ' + escapeHtml(s.checkboxText) + "</label>") +
+      taskBlock(s.taskLabel, '<label style="display:flex;align-items:flex-start;gap:8px;font-size:13.5px;"><input type="checkbox" id="safetyCheckbox" ' + (state.safetyAccepted ? "checked" : "") + ' data-action="toggle-safety" style="width:auto;margin-top:3px;"> ' + escapeHtml(s.checkboxText) + "</label>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.safetyLog")) + " " + tag(state.artifacts.safetyLog)) +
       block(s.stopCheckLabel, '<p class="next-hint" style="margin-top:0;">' + escapeHtml(s.stopCheckText) + '</p><button type="button" class="btn btn-stop" data-action="trigger-stop" data-source="safety-screen">' + escapeHtml(s.stopBtn) + "</button>") +
       gateBlock("G0");
@@ -986,7 +1006,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      block(s.taskLabel, '<div class="chips-row">' + chips + "</div>") +
+      taskBlock(s.taskLabel, '<div class="chips-row">' + chips + "</div>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.zoneMap")) + " " + tag(state.artifacts.zoneMap)) +
       gateBlock("G1");
     return screenShell(2, body, { nextHint: s.nextHint });
@@ -1003,7 +1023,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      block(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p><div class=\"zone-list\">" + items + "</div>") +
+      taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p><div class=\"zone-list\">" + items + "</div>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.routeChecklist")) + " " + tag(state.artifacts.routeChecklist) + " · " + escapeHtml(s.selectedZonesWord) + ": " + state.zones.length) +
       gateBlock("G2");
     return screenShell(3, body, { nextHint: s.nextHint });
@@ -1018,7 +1038,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      block(s.taskLabel, '<div class="system-list">' + items + "</div>") +
+      taskBlock(s.taskLabel, '<div class="system-list">' + items + "</div>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + " " + escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.sysCompTable));
     return screenShell(4, body, { nextHint: s.nextHint });
   };
@@ -1037,7 +1057,7 @@
         return '<div class="choice-chip' + (selected ? " selected" : "") + '" data-action="select-component" data-component="' + cid + '">' + escapeHtml(title) + "</div>";
       }).join("");
       body += block(s.explanationLabel, "<p>«" + escapeHtml(t("systems." + sys.id + ".title")) + "» — " + escapeHtml(s.explanation) + "</p>") +
-        block(s.taskLabel, '<div class="chips-row">' + comps + "</div>");
+        taskBlock(s.taskLabel, '<div class="chips-row">' + comps + "</div>");
     }
     body += block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + ": " + resolveSystemTitle(state.selectedSystem) + " → " + resolveComponentTitle(state.selectedSystem, state.selectedComponentId)) +
       gateBlock("G3");
@@ -1053,7 +1073,7 @@
     }).join("");
     var body =
       block(s.distinctionLabel, '<p class="callout fact">' + s.distinction + "</p>") +
-      block(s.taskLabel, '<div class="chips-row">' + chips + "</div>" +
+      taskBlock(s.taskLabel, '<div class="chips-row">' + chips + "</div>" +
         '<div class="field" style="margin-top:10px;"><label class="field-label">' + escapeHtml(s.noteLabel) + '</label><input type="text" data-action="input-symptom-note" value="' + escapeHtml(state.symptomNote) + '" placeholder="' + escapeHtml(s.notePlaceholder) + '"></div>') +
       block(s.artifactLabel, escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.defectCards)) +
       gateBlock("G4");
@@ -1134,7 +1154,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      block(s.taskLabel, '<div class="chips-row">' + levels + "</div>") +
+      taskBlock(s.taskLabel, '<div class="chips-row">' + levels + "</div>") +
       (state.lastRisk === "HIGH" || state.lastRisk === "BLOCKED" ? '<div class="callout safety">' + escapeHtml(s.warnHighBlocked) + "</div>" : "") +
       block(s.artifactLabel, escapeHtml(s.artifactText));
     return screenShell(9, body, { nextHint: s.nextHint });
@@ -1149,7 +1169,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      block(s.taskLabel, '<div class="chips-row">' + actions + "</div>") +
+      taskBlock(s.taskLabel, '<div class="chips-row">' + actions + "</div>") +
       (state.selectedAction === "neutral_message" ? block(s.neutralMsgBlockLabel,
         '<textarea id="neutralMessageInput" rows="5">' + escapeHtml(state.neutralMessageText || defaultNeutralMessage()) + "</textarea>" +
         '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="save-message">' + escapeHtml(s.saveMsgBtn) + "</button></div>") : "") +
