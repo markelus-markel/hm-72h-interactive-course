@@ -323,6 +323,7 @@
         case_b: { title: "Учебный кейс Б", note: "дом с лифтом и мусоропроводом" },
         case_c: { title: "Симуляция (без реального объекта)", note: "работа только с учебными материалами, без выхода на объект" }
       },
+      appBridge: "В реальном приложении HouseMaster Inspector (insp.housemasters.kz) это соответствует карточке объекта обследования.",
       nextHint: "выбор зон дома для маршрута осмотра (SCR-04)"
     },
     scr04: {
@@ -330,12 +331,14 @@
       explanation: "Маршрут осмотра строится по зонам дома. Часть зон осматривается только визуально или требует сопровождения — это отмечено в подсказках.",
       taskLabel: "Задание студенту", task: "Отметьте зоны, которые войдут в маршрутный чек-лист.",
       artifactLabel: "Артефакт", selectedZonesWord: "выбрано зон",
+      appBridge: "В приложении HouseMaster Inspector то же самое отражается в поле «Место» карточки наблюдения.",
       nextHint: "инженерные системы дома (SCR-05)"
     },
     scr05: {
       explanationLabel: "Объяснение",
       explanation: "Каждая зона дома обслуживается инженерными системами. Студент выбирает систему, относящуюся к выбранным зонам маршрута, для дальнейшего осмотра.",
       taskLabel: "Задание студенту", artifactLabel: "Артефакт", artifactStarted: "(начата)",
+      appBridge: "В приложении HouseMaster Inspector система и компонент фиксируются вместе, в колонке «Компонент».",
       nextHint: "выбор конкретного компонента системы (SCR-06)"
     },
     scr06: {
@@ -343,6 +346,7 @@
       explanationLabel: "Объяснение",
       explanation: "выберите конкретный компонент выбранной системы — именно на этом компоненте будет зафиксирован видимый признак.",
       taskLabel: "Задание студенту", artifactLabel: "Артефакт",
+      appBridge: "В приложении HouseMaster Inspector это колонка «Компонент» карточки наблюдения.",
       nextHint: "фиксация видимого признака / симптома (SCR-07)"
     },
     scr07: {
@@ -351,6 +355,7 @@
       taskLabel: "Задание студенту", noteLabel: "Короткое примечание (опционально)",
       notePlaceholder: "Например: пятно у стояка ГВС, 3 этаж",
       artifactLabel: "Артефакт", artifactStarted: "Карточка дефекта (черновик начат)",
+      appBridge: "В приложении HouseMaster Inspector видимый признак фиксируется в колонке «Наблюдение».",
       nextHint: "привязка Photo-ID к признаку (SCR-08)"
     },
     scr08: {
@@ -360,6 +365,7 @@
       uploadLabel: "Опционально — локальная загрузка своего фото (только для демонстрации, файл не отправляется никуда)",
       uploadedAlt: "Загруженное фото (локально, только для демо)",
       artifactLabel: "Артефакт",
+      appBridge: "В приложении HouseMaster Inspector это колонка «Фото» карточки наблюдения.",
       nextHint: "заполнение карточки дефекта (SCR-09)"
     },
     scr09: {
@@ -379,6 +385,7 @@
       noCardsYet: "Пока нет сохранённых карточек.",
       tableHeaders: { id: "ID", zone: "Зона", system: "Система", component: "Компонент", sign: "Признак", photo: "Photo-ID", fact: "Факт", hypothesis: "Гипотеза", risk: "Риск", action: "Действие", status: "Статус" },
       artifactLabel: "Артефакт",
+      appBridge: "В приложении HouseMaster Inspector «Факт» соответствует полям «Наблюдение» / «Измерение» / «Норма». У «Гипотезы» прямого аналога нет — в реальном приложении фиксируется только проверяемый факт, предположения туда не вносятся.",
       nextHint: "оценка риска (SCR-10)"
     },
     scr10: {
@@ -484,6 +491,7 @@
         case_b: { title: "Оқу кейсі Б", note: "лифті және қоқыс жинайтын құбыры бар үй" },
         case_c: { title: "Симуляция (нақты нысансыз)", note: "тек оқу материалдарымен жұмыс, объектіге шықпай" }
       },
+      appBridge: "Нақты HouseMaster Inspector қолданбасында (insp.housemasters.kz) бұл қарап-тексеру объектісінің карточкасына сәйкес келеді.",
       nextHint: "қарап-тексеру маршруты үшін үй аймақтарын таңдау (SCR-04)"
     },
     scr04: {
@@ -491,12 +499,14 @@
       explanation: "Қарап-тексеру маршруты үй аймақтары бойынша құрылады. Кейбір аймақтар тек көзбен қаралады немесе сүйемелдеуді талап етеді — бұл кеңестерде белгіленген.",
       taskLabel: "Студентке тапсырма", task: "Маршруттық чек-листке кіретін аймақтарды белгілеңіз.",
       artifactLabel: "Артефакт", selectedZonesWord: "таңдалған аймақтар",
+      appBridge: "HouseMaster Inspector қолданбасында дәл осы нәрсе бақылау карточкасындағы «Место» өрісінде көрсетіледі.",
       nextHint: "үйдің инженерлік жүйелері (SCR-05)"
     },
     scr05: {
       explanationLabel: "Түсіндірме",
       explanation: "Үйдің әрбір аймағына инженерлік жүйелер қызмет көрсетеді. Студент әрі қарай қарап-тексеру үшін маршруттың таңдалған аймақтарына қатысты жүйені таңдайды.",
       taskLabel: "Студентке тапсырма", artifactLabel: "Артефакт", artifactStarted: "(басталды)",
+      appBridge: "HouseMaster Inspector қолданбасында жүйе мен компонент бірге, «Компонент» бағанында тіркеледі.",
       nextHint: "жүйенің нақты компонентін таңдау (SCR-06)"
     },
     scr06: {
@@ -504,6 +514,7 @@
       explanationLabel: "Түсіндірме",
       explanation: "таңдалған жүйенің нақты компонентін таңдаңыз — көрінетін белгі дәл осы компонентте тіркеледі.",
       taskLabel: "Студентке тапсырма", artifactLabel: "Артефакт",
+      appBridge: "HouseMaster Inspector қолданбасында бұл — бақылау карточкасындағы «Компонент» бағаны.",
       nextHint: "көрінетін белгіні / симптомды тіркеу (SCR-07)"
     },
     scr07: {
@@ -512,6 +523,7 @@
       taskLabel: "Студентке тапсырма", noteLabel: "Қысқа ескертпе (міндетті емес)",
       notePlaceholder: "Мысалы: 3-қабаттағы ыстық су тік құбырының жанындағы дақ",
       artifactLabel: "Артефакт", artifactStarted: "Ақау карточкасы (жоба басталды)",
+      appBridge: "HouseMaster Inspector қолданбасында көрінетін белгі «Наблюдение» бағанында тіркеледі.",
       nextHint: "белгіге Photo-ID тіркеу (SCR-08)"
     },
     scr08: {
@@ -521,6 +533,7 @@
       uploadLabel: "Міндетті емес — өз фотоңызды жергілікті жүктеу (тек демонстрация үшін, файл ешқайда жіберілмейді)",
       uploadedAlt: "Жүктелген фото (жергілікті, тек демо үшін)",
       artifactLabel: "Артефакт",
+      appBridge: "HouseMaster Inspector қолданбасында бұл — бақылау карточкасындағы «Фото» бағаны.",
       nextHint: "ақау карточкасын толтыру (SCR-09)"
     },
     scr09: {
@@ -540,6 +553,7 @@
       noCardsYet: "Әзірге сақталған карточкалар жоқ.",
       tableHeaders: { id: "ID", zone: "Аймақ", system: "Жүйе", component: "Компонент", sign: "Белгі", photo: "Photo-ID", fact: "Факт", hypothesis: "Гипотеза", risk: "Тәуекел", action: "Әрекет", status: "Мәртебесі" },
       artifactLabel: "Артефакт",
+      appBridge: "HouseMaster Inspector қолданбасында «Факт» «Наблюдение» / «Измерение» / «Норма» өрістеріне сәйкес келеді. «Гипотезаның» тікелей аналогы жоқ — нақты қолданбада тек тексерілетін факт тіркеледі, болжамдар енгізілмейді.",
       nextHint: "тәуекелді бағалау (SCR-10)"
     },
     scr10: {
@@ -961,6 +975,14 @@
     return '<div class="block block-task"><div class="block-label">' + escapeHtml(label) + '</div><div class="block-body">' + bodyHtml + "</div></div>";
   }
 
+  // Short note bridging a course concept to its corresponding field in the real
+  // HouseMaster Inspector field app (insp.housemasters.kz) — e.g. "Карта зон" (SCR-03/04)
+  // here corresponds to the "Место" column there. Purely additive explanatory text; no
+  // artifact IDs, gates, or state model changed.
+  function appBridgeHtml(text) {
+    return text ? '<div class="app-bridge-hint">🔗 ' + escapeHtml(text) + "</div>" : "";
+  }
+
   var SCREEN_RENDERERS = [];
 
   // SCR-01 — Старт курса
@@ -1007,7 +1029,7 @@
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       taskBlock(s.taskLabel, '<div class="chips-row">' + chips + "</div>") +
-      block(s.artifactLabel, escapeHtml(t("artifacts.zoneMap")) + " " + tag(state.artifacts.zoneMap)) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.zoneMap")) + " " + tag(state.artifacts.zoneMap) + appBridgeHtml(s.appBridge)) +
       gateBlock("G1");
     return screenShell(2, body, { nextHint: s.nextHint });
   };
@@ -1024,7 +1046,7 @@
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p><div class=\"zone-list\">" + items + "</div>") +
-      block(s.artifactLabel, escapeHtml(t("artifacts.routeChecklist")) + " " + tag(state.artifacts.routeChecklist) + " · " + escapeHtml(s.selectedZonesWord) + ": " + state.zones.length) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.routeChecklist")) + " " + tag(state.artifacts.routeChecklist) + " · " + escapeHtml(s.selectedZonesWord) + ": " + state.zones.length + appBridgeHtml(s.appBridge)) +
       gateBlock("G2");
     return screenShell(3, body, { nextHint: s.nextHint });
   };
@@ -1039,7 +1061,7 @@
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       taskBlock(s.taskLabel, '<div class="system-list">' + items + "</div>") +
-      block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + " " + escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.sysCompTable));
+      block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + " " + escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.sysCompTable) + appBridgeHtml(s.appBridge));
     return screenShell(4, body, { nextHint: s.nextHint });
   };
 
@@ -1059,7 +1081,7 @@
       body += block(s.explanationLabel, "<p>«" + escapeHtml(t("systems." + sys.id + ".title")) + "» — " + escapeHtml(s.explanation) + "</p>") +
         taskBlock(s.taskLabel, '<div class="chips-row">' + comps + "</div>");
     }
-    body += block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + ": " + resolveSystemTitle(state.selectedSystem) + " → " + resolveComponentTitle(state.selectedSystem, state.selectedComponentId)) +
+    body += block(s.artifactLabel, escapeHtml(t("artifacts.sysCompTable")) + ": " + resolveSystemTitle(state.selectedSystem) + " → " + resolveComponentTitle(state.selectedSystem, state.selectedComponentId) + appBridgeHtml(s.appBridge)) +
       gateBlock("G3");
     return screenShell(5, body, { nextHint: s.nextHint });
   };
@@ -1075,7 +1097,7 @@
       block(s.distinctionLabel, '<p class="callout fact">' + s.distinction + "</p>") +
       taskBlock(s.taskLabel, '<div class="chips-row">' + chips + "</div>" +
         '<div class="field" style="margin-top:10px;"><label class="field-label">' + escapeHtml(s.noteLabel) + '</label><input type="text" data-action="input-symptom-note" value="' + escapeHtml(state.symptomNote) + '" placeholder="' + escapeHtml(s.notePlaceholder) + '"></div>') +
-      block(s.artifactLabel, escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.defectCards)) +
+      block(s.artifactLabel, escapeHtml(s.artifactStarted) + " " + tag(state.artifacts.defectCards) + appBridgeHtml(s.appBridge)) +
       gateBlock("G4");
     return screenShell(6, body, { nextHint: s.nextHint });
   };
@@ -1093,7 +1115,7 @@
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       block(s.galleryTaskLabel, '<div class="photo-grid">' + tiles + "</div>") +
       block(s.uploadLabel, '<input type="file" accept="image/*" id="photoUploadInput"> ' + preview) +
-      block(s.artifactLabel, escapeHtml(t("artifacts.photoId")) + ": " + resolvePhotoLabel(state.selectedPhoto || (state.uploadedPhotoDataUrl ? "__LOCAL_FILE__" : null)) + " " + tag(state.artifacts.photoId)) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.photoId")) + ": " + resolvePhotoLabel(state.selectedPhoto || (state.uploadedPhotoDataUrl ? "__LOCAL_FILE__" : null)) + " " + tag(state.artifacts.photoId) + appBridgeHtml(s.appBridge)) +
       gateBlock("G5");
     return screenShell(7, body, { nextHint: s.nextHint });
   };
@@ -1120,7 +1142,7 @@
         '<div style="margin-top:10px;display:flex;gap:8px;"><button type="button" class="btn btn-secondary" data-action="submit-defect-card">' + escapeHtml(s.saveCardBtn) + "</button></div>") +
       block(s.distinctionLabel, '<p class="callout hypo">' + escapeHtml(s.distinction) + "</p>") +
       block(s.savedCardsLabel + " (" + state.defectCards.length + ", " + s.savedCardsHint + ")", renderCardsTable()) +
-      block(s.artifactLabel, escapeHtml(t("artifacts.defectCards")) + " " + tag(state.artifacts.defectCards)) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.defectCards")) + " " + tag(state.artifacts.defectCards) + appBridgeHtml(s.appBridge)) +
       gateBlock("G6");
     return screenShell(8, body, { nextHint: s.nextHint });
   };

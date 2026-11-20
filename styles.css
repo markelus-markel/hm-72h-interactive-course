@@ -238,6 +238,13 @@ button{font-family:inherit;}
   font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.4;
 }
 
+/* Bridges a course concept/artifact to the matching field in the real HouseMaster
+   Inspector field app (insp.housemasters.kz) — e.g. "this is the «Место» column there". */
+.app-bridge-hint{
+  font-size:11px;color:var(--accent-blue-dark2);background:#f2f7fb;border-left:2px solid var(--accent-blue);
+  border-radius:4px;padding:5px 8px;margin-top:8px;line-height:1.4;
+}
+
 .tag{
   display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:600;color:#fff;
 }

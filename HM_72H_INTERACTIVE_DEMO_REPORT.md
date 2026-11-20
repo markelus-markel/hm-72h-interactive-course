@@ -1,7 +1,15 @@
-# HM_72H Interactive Course Demo — Implementation Report v1.4
+# HM_72H Interactive Course Demo — Implementation Report v1.5
 
 ## Changelog
 
+- **v1.5 (real-app terminology bridge):** Added a short, visually distinct note ("🔗 ...")
+  under the artifact status on 7 screens (SCR-03, SCR-04, SCR-05, SCR-06, SCR-07, SCR-08,
+  SCR-09), naming the matching field/column in the real HouseMaster Inspector field app
+  (`insp.housemasters.kz`) that students will use for actual field inspections — e.g. SCR-04's
+  "Карта зон" status is now explicitly tied to the real app's "Место" column. Purely additive
+  text (new `appBridge` string per screen, RU+KZ, plus one new CSS class); no artifact IDs,
+  gate logic, or state model changed. See "What changed (v1.5 real-app terminology bridge)"
+  below.
 - **v1.4 (UI/UX polish):** A visual/readability-only pass over the v1.3 bilingual demo, aimed
   at making it easier to demonstrate to a director, methodist, teacher, or student group. No
   screen was added or removed, no Gate↔screen mapping changed, no artifact logic changed, and
@@ -359,6 +367,40 @@ suppressed anywhere.
 - No screen was added/removed, no Gate↔screen mapping changed, no artifact tracker logic
   changed, no internal state model changed, no course methodology or safety/responsibility
   semantics changed, and no backend/LMS/PWA/login/database/package/API was introduced.
+
+## What changed (v1.5 real-app terminology bridge)
+
+Students will eventually practice the same inspection in the field using the real
+HouseMaster Inspector app (`insp.housemasters.kz`, prototype SEM-MCD-001), whose observation
+cards use a fixed set of column names (Место, Компонент, Наблюдение, Фото, Измерение, Норма,
+...). The course previously used its own, differently-shaped vocabulary (object → zone →
+system → component → symptom → Photo-ID → defect card) with no stated link between the two,
+which is what made "Карта зон" on SCR-03 read as an unexplained status tag rather than
+something tied to a real skill.
+
+- Added one new localized string, `appBridge` (RU canonical + KZ draft), to the screen-text
+  data for SCR-03, SCR-04, SCR-05, SCR-06, SCR-07, SCR-08, and SCR-09. Each names the real
+  app's corresponding field in one short sentence, e.g.:
+  - SCR-03 (object/case selection) → "соответствует карточке объекта обследования"
+  - SCR-04 (zone selection) → real app's **«Место»** column
+  - SCR-05/SCR-06 (system → component) → real app's **«Компонент»** column (the real app has
+    no separate "system" field; system+component are recorded together there)
+  - SCR-07 (visible sign) → **«Наблюдение»** column
+  - SCR-08 (Photo-ID) → **«Фото»** column
+  - SCR-09 (defect card): Факт → «Наблюдение» / «Измерение» / «Норма»; the note is explicit
+    that **Гипотеза has no real-app equivalent** — the field app only ever records a checked
+    fact, never a hypothesis, which is deliberately surfaced rather than papered over.
+- Added one new rendering helper, `appBridgeHtml(text)`, and one new CSS class,
+  `.app-bridge-hint` (small, blue-tinted, left accent bar, with a 🔗 prefix — visually
+  distinct from the grey `.status-legend-hint` gate legend so the two kinds of "hint" aren't
+  confused), and wired both into the existing artifact-status line on the 7 screens above.
+- Artifact IDs (`zoneMap`, `routeChecklist`, `sysCompTable`, ...), their on-screen labels,
+  Gate↔screen mapping, and all state/persistence logic are unchanged. This is additive
+  explanatory text only.
+- Scope decision (confirmed with the requester): rename nothing, add a cross-reference layer
+  instead — renaming "Карта зон" itself was considered and rejected as more likely to confuse
+  than clarify, since the artifact ID and existing label are already referenced elsewhere
+  (teacher panel, final package table).
 
 ## Scope confirmation
 
