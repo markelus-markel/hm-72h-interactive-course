@@ -1,7 +1,36 @@
-# HM_72H Interactive Course Demo — Implementation Report v2.1
+# HM_72H Interactive Course Demo — Implementation Report v2.2
 
 ## Changelog
 
+- **v2.2 (iOS-style visual redesign):** By explicit request ("дизайн в стиле айфона"),
+  restyled the entire app to follow Apple's iOS/Human Interface Guidelines visual language —
+  scoped, via an explicit three-part confirmation, to (1) the full iOS visual language (not a
+  literal device-frame mockup, not a generic minimalist refresh), (2) applied everywhere —
+  desktop and mobile, not mobile-only, and (3) light theme only, no dark-mode toggle for now.
+  `styles.css` was fully rewritten; every existing selector/class name referenced by `app.js` or
+  by the QA scripts was preserved exactly — only property values (colors, radii, shadows,
+  weights) changed, plus new `::after`-based pseudo-elements for two components. Highlights:
+  iOS semantic color palette (systemBlue #007AFF primary accent, systemGreen #34C759 for PASS,
+  systemOrange #FF9500 for REDO, systemRed #FF3B30/#D70015 for BLOCKED/STOP) on a light
+  systemGroupedBackground (#F2F2F7) page with white rounded "continuous corner" cards (16px
+  radius, soft shadow); a frosted-glass sticky header (`backdrop-filter: blur`); the RU/KZ
+  language switcher restyled as an iOS segmented control; both checkboxes in the app
+  (`#persistToggle`, `#safetyCheckbox`) restyled as iOS toggle switches via
+  `appearance:none` + an `::after` thumb (required one small `app.js` change: removed an inline
+  `style="width:auto;margin-top:3px;"` on `#safetyCheckbox` that would otherwise have overridden
+  the new global switch styling — replaced by a CSS rule); borderless filled/tinted button
+  styles across the `.btn` family with `:active{transform:scale(0.96)}` press feedback instead
+  of the old outline/hover look; status tags (`.tag-*`) restyled as tinted pill badges (soft
+  color background + solid color text) instead of solid-fill-white-text; semibold (600) heading
+  weights throughout instead of bold (700/800); the teacher panel kept as its own deliberately
+  dark, iOS-dark-mode-styled sub-theme, visually distinct from the light student-facing chrome,
+  with its one nested light "cutout" card (field-practice review) kept legible against the dark
+  background. All responsive breakpoints (980px, 600px) and the print stylesheet were preserved
+  structurally. Verified with `node -c app.js`, all three QA scripts re-run clean after the
+  change (`smoke_check.js` 12/12, `smoke_check_v16.js` 20/20, `student_simulator.js` 106/106, 0
+  console/page errors — the 7 logged gap-findings are pre-existing validation/UX notes, not new
+  regressions), and visual screenshots taken in both languages at desktop (1440px) and mobile
+  (390px) widths with no horizontal overflow. See "What changed (v2.2)" below.
 - **v2.1 (anglicism removal):** By explicit request, removed the remaining bare-English UI
   terms across both RU and KZ — these had been a deliberate "fixed-term" decision since v1.1/
   v1.2, now reversed. Three categories, all addressed: (1) gate/artifact status words
@@ -701,6 +730,96 @@ overflow — were already fixed in v1.9.)
   defectStatement-dropdown probe, and the artifact-card CSS selector — which needed updating
   once a 3rd `.teacher-card` existed — all now assert the corrected behavior) and runs
   106/106 clean, 0 console/page errors.
+
+## What changed (v2.2 iOS-style visual redesign)
+
+By explicit request ("мы сможем сделать дизайн в стиле айфона?"), scoped via an
+AskUserQuestion the user answered in full: full iOS visual language (not a device-frame
+mockup, not a generic minimalist pass), applied everywhere (desktop + mobile), light theme
+only (no dark mode for now).
+
+**Constraint followed throughout:** every CSS selector/class name used by `app.js`-generated
+markup or asserted on by the three QA scripts was kept byte-for-byte identical — only property
+*values* changed (colors, radii, shadows, weights, paddings), plus two new `::after`
+pseudo-element rules for the checkbox→switch conversion. No HTML structure changed
+(`index.html` needed no edits — confirmed in advance by reading it in full).
+
+**1. Color system and surfaces**
+
+- `:root` custom properties kept their names but took iOS semantic-color values: systemBlue
+  `#007AFF` (primary accent — replacing the old green-as-primary scheme), systemGreen
+  `#34C759` (PASS/success), systemOrange `#FF9500` (REDO), systemRed `#FF3B30`/`#D70015`
+  (BLOCKED/STOP), systemGray scale for neutral/not-started.
+- Page background became `#F2F2F7` (iOS systemGroupedBackground); `.screen-card`, `.sidebar`,
+  `.artifacts-panel` became white rounded cards (16px "continuous corner" radius) with a soft
+  `--shadow` instead of a flat 1px border.
+
+**2. Header**
+
+- `.app-header` is now a translucent, sticky, frosted-glass bar: `rgba(255,255,255,0.78)` +
+  `backdrop-filter: saturate(180%) blur(20px)`.
+- `.lang-switch`/`.lang-btn` restyled as an iOS segmented control (gray track, white sliding
+  "active" pill with a subtle shadow) — no markup change, the existing two-button group was
+  already shaped correctly for this.
+- `.meta-chip` family (gate-progress / readiness / warning chips) became tinted pill badges
+  instead of flat-gray boxes.
+
+**3. Controls**
+
+- `input[type="checkbox"]` globally restyled as an iOS toggle switch (`appearance:none` + an
+  `::after` thumb, green when checked) — confirmed in advance that only two checkboxes exist
+  anywhere in the app (`#persistToggle`, `#safetyCheckbox`), so a global rule is safe.
+  `#safetyCheckbox` had an inline `style="width:auto;margin-top:3px;"` in `app.js` that would
+  have overridden this via specificity — removed that inline style (the one `app.js` edit in
+  this round) and replaced the vertical-alignment nudge with a plain `#safetyCheckbox{margin-
+  top:1px;}` CSS rule.
+- `.btn` family (primary/secondary/stop/outline/teacher/sm/lg) rebuilt as borderless
+  filled/tinted/gray iOS button styles with `:active{transform:scale(0.96)}` press feedback,
+  replacing the old outline + translateY hover/press treatment. The gate-status 6-button row
+  (`gateStatusButtons()`) needed no JS change — it already marks the active status with
+  `.btn-primary`, which now simply renders as a filled blue pill against the neutral gray
+  siblings.
+
+**4. Status tags and callouts**
+
+- `.tag`/`.tag-*` (status + risk pills) changed from solid-fill/white-text to the iOS "tinted
+  badge" look: a ~15%-opacity color background with solid-color text.
+- `.callout`/`.callout.safety/.fact/.hypo` and `.block-task` kept their left-accent-bar pattern
+  but moved to softer tinted backgrounds matching the new palette.
+
+**5. Typography**
+
+- Headings (`h1–h4`) moved from bold/extra-bold (700/800) to semibold (600), matching Apple's
+  typographic convention; `-apple-system` was already first in the font stack and needed no
+  change.
+
+**6. Teacher panel**
+
+- Kept intentionally dark (now true iOS dark-mode surface colors `#1c1c1e`/`#2c2c2e`) so it
+  reads unambiguously as a separate "teacher dashboard" mode, distinct from the light
+  student-facing chrome above and below it.
+- Its one nested light "cutout" card (the field-practice review box, `.teacher-card-wide
+  .gate-box`) was kept on a light `#F2F2F7` background rather than a dark translucent one, so
+  the gate-box's own light-theme text colors (title, status-legend hint) stay legible inside
+  the dark panel — this matches the original author's intent for that one nested card.
+
+**7. Responsive and print**
+
+- Both media-query breakpoints (980px, 600px) and the print stylesheet were kept structurally
+  identical; only colors/radii/paddings inside them were adjusted to match the new tokens.
+
+**Verification**
+
+- `node -c app.js` passed after the inline-style removal.
+- `smoke_check.js` (12/12), `smoke_check_v16.js` (20/20), `student_simulator.js` (106/106, 0
+  console/page errors) all re-run clean — a CSS-only change plus one inline-style removal
+  does not touch DOM structure or state logic, but the overflow checks (1440px/820px in
+  `smoke_check.js`) specifically guard against the new radii/paddings/switch dimensions
+  breaking layout, and they passed.
+- Manual visual check via Playwright screenshots: desktop (1440px) and mobile (390px) widths,
+  both RU and KZ, covering the intro screen, a form/gate/toggle-heavy screen (SCR-02), and the
+  teacher panel. No horizontal overflow, no clipped/overlapping text, toggle switches and
+  segmented control render correctly in both languages.
 
 ## What changed (v2.1 anglicism removal)
 

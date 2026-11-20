@@ -1097,7 +1097,7 @@
     var body =
       block(s.roleLabel, "<p>" + s.role + "</p>") +
       block(s.safetyLabel, '<div class="callout safety"><ul>' + safetyItems + "</ul></div>") +
-      taskBlock(s.taskLabel, '<label style="display:flex;align-items:flex-start;gap:8px;font-size:13.5px;"><input type="checkbox" id="safetyCheckbox" ' + (state.safetyAccepted ? "checked" : "") + ' data-action="toggle-safety" style="width:auto;margin-top:3px;"> ' + escapeHtml(s.checkboxText) + "</label>") +
+      taskBlock(s.taskLabel, '<label style="display:flex;align-items:flex-start;gap:8px;font-size:13.5px;"><input type="checkbox" id="safetyCheckbox" ' + (state.safetyAccepted ? "checked" : "") + ' data-action="toggle-safety"> ' + escapeHtml(s.checkboxText) + "</label>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.safetyLog")) + " " + tag(state.artifacts.safetyLog)) +
       block(s.stopCheckLabel, '<p class="next-hint" style="margin-top:0;">' + escapeHtml(s.stopCheckText) + '</p><button type="button" class="btn btn-stop" data-action="trigger-stop" data-source="safety-screen">' + escapeHtml(s.stopBtn) + "</button>") +
       gateBlock("G0");
