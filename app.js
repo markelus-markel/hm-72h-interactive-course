@@ -241,6 +241,7 @@
     persistTitle: "Опционально: сохранять состояние демо в этом браузере",
     teacherBtnOff: "Режим преподавателя", teacherBtnOn: "Скрыть режим преподавателя",
     stopBtnLabel: "Симулировать STOP", stopBtnTitle: "STOP (остановка по безопасности)",
+    stopBtnHeaderHint: "Для демонстрации — не реальный сигнал тревоги",
     resetBtnLabel: "Reset demo", resetBtnTitle: "Reset demo (сброс демонстрации)",
     langSwitchTitle: "Язык интерфейса", langRuLabel: "Рус", langKzLabel: "Қаз",
     hourUnit: "ч", moduleWord: "Модуль", introScreenLabel: "Вводный экран", introChip: "Вводный экран курса",
@@ -280,6 +281,7 @@
     persistTitle: "Міндетті емес: демо күйін осы браузерде сақтау",
     teacherBtnOff: "Оқытушы режимі", teacherBtnOn: "Оқытушы режимін жасыру",
     stopBtnLabel: "STOP-ты имитациялау", stopBtnTitle: "STOP (қауіпсіздік бойынша тоқтату)",
+    stopBtnHeaderHint: "Демонстрация үшін — нақты қауіп сигналы емес",
     resetBtnLabel: "Reset demo", resetBtnTitle: "Reset demo (көрсетілімді бастапқы күйге қайтару)",
     langSwitchTitle: "Интерфейс тілі", langRuLabel: "Рус", langKzLabel: "Қаз",
     hourUnit: "сағ", moduleWord: "Модуль", introScreenLabel: "Кіріспе экран", introChip: "Курстың кіріспе экраны",
@@ -842,7 +844,10 @@
       "</label>" +
       '<button type="button" class="btn btn-outline btn-teacher' + teacherActive + '" data-action="toggle-teacher" id="teacherToggleBtn">' +
       '<span class="teacher-dot" aria-hidden="true"></span>' + escapeHtml(state.teacherView ? t("ui.teacherBtnOn") : t("ui.teacherBtnOff")) + "</button>" +
+      '<span class="stop-btn-wrap">' +
       '<button type="button" class="btn btn-stop" data-action="trigger-stop" data-source="header" title="' + escapeHtml(t("ui.stopBtnTitle")) + '">' + escapeHtml(t("ui.stopBtnLabel")) + "</button>" +
+      '<span class="stop-btn-hint">' + escapeHtml(t("ui.stopBtnHeaderHint")) + "</span>" +
+      "</span>" +
       '<button type="button" class="btn btn-outline" data-action="reset-demo" title="' + escapeHtml(t("ui.resetBtnTitle")) + '">' + escapeHtml(t("ui.resetBtnLabel")) + "</button>" +
       "</div>";
   }
