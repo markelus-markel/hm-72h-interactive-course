@@ -76,11 +76,12 @@
     { scr: "SCR-11", moduleId: 4, gate: "G7" },
     { scr: "SCR-12", moduleId: 6 },
     { scr: "SCR-13", moduleId: 6, gate: "G8" },
-    { scr: "SCR-14", moduleId: 8 },
-    { scr: "SCR-15", moduleId: 8, gate: "G9" }
+    { scr: "SCR-14", moduleId: 8, gate: "G9" },
+    { scr: "SCR-15", moduleId: 8 },
+    { scr: "SCR-16", moduleId: 8, gate: "G10" }
   ];
 
-  var GATES_DEF = ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"];
+  var GATES_DEF = ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10"];
   var ARTIFACTS_DEF = [
     "zoneMap", "routeChecklist", "sysCompTable", "defectCards", "photoId", "defectStatement",
     "actDraft", "neutralMessage", "safetyLog", "gateLog", "selfReport", "finalDefense", "fieldEvidence"
@@ -111,27 +112,31 @@
     "SCR-04": "Зоны дома", "SCR-05": "Инженерные системы", "SCR-06": "Система → компонент",
     "SCR-07": "Видимый признак / симптом", "SCR-08": "Фотофиксация / Photo-ID", "SCR-09": "Карточка дефекта",
     "SCR-10": "Риск", "SCR-11": "Безопасное действие", "SCR-12": "Дефектная ведомость",
-    "SCR-13": "Учебный проект технического акта", "SCR-14": "Итоговый пакет", "SCR-15": "Защита / результат"
+    "SCR-13": "Учебный проект технического акта", "SCR-14": "Полевая практика",
+    "SCR-15": "Итоговый пакет", "SCR-16": "Защита / результат"
   };
   STR.kz.screens = {
     "SCR-01": "Курстың басталуы", "SCR-02": "Студенттің рөлі және safety", "SCR-03": "МКД объект картасы",
     "SCR-04": "Үй аймақтары", "SCR-05": "Инженерлік жүйелер", "SCR-06": "Жүйе → компонент",
     "SCR-07": "Көрінетін белгі / симптом", "SCR-08": "Фотофиксация / Photo-ID", "SCR-09": "Ақау карточкасы",
     "SCR-10": "Тәуекел", "SCR-11": "Қауіпсіз келесі әрекет", "SCR-12": "Ақаулар ведомосі",
-    "SCR-13": "Техникалық актінің оқу жобасы", "SCR-14": "Қорытынды пакет", "SCR-15": "Қорғау / нәтиже"
+    "SCR-13": "Техникалық актінің оқу жобасы", "SCR-14": "Далалық практика",
+    "SCR-15": "Қорытынды пакет", "SCR-16": "Қорғау / нәтиже"
   };
 
   STR.ru.gates = {
     G0: "Понимание роли и safety", G1: "Объект / симуляция выбраны", G2: "Зона выбрана",
     G3: "Система и компонент определены", G4: "Видимый признак зафиксирован", G5: "Photo-ID привязан",
     G6: "Карточка дефекта заполнена", G7: "Риск и безопасное действие определены",
-    G8: "Дефектная ведомость собрана", G9: "Итоговый пакет готов к защите"
+    G8: "Дефектная ведомость собрана", G9: "Полевая практика подтверждена",
+    G10: "Итоговый пакет готов к защите"
   };
   STR.kz.gates = {
     G0: "Рөл мен safety-ді түсіну", G1: "Объект / симуляция таңдалды", G2: "Аймақ таңдалды",
     G3: "Жүйе және компонент анықталды", G4: "Көрінетін белгі тіркелді", G5: "Photo-ID тіркелді",
     G6: "Ақау карточкасы толтырылды", G7: "Тәуекел және қауіпсіз әрекет анықталды",
-    G8: "Ақаулар ведомосі жиналды", G9: "Қорытынды пакет қорғауға дайын"
+    G8: "Ақаулар ведомосі жиналды", G9: "Далалық практика расталды",
+    G10: "Қорытынды пакет қорғауға дайын"
   };
 
   STR.ru.artifacts = {
@@ -249,7 +254,7 @@
     artifactsSub: "Итоговый пакет: карта зон, чек-лист, таблица система→компонент, ≥3 карточки дефекта, Photo-ID, ведомость, акт, сообщение, safety-log, gate-log, self-report, защита, полевое задание.",
     localFileLabel: "локальный файл", dash: "—",
     teacherHeading: "Режим преподавателя — сводка прогресса группы/студента (демо)",
-    teacherGatesHeading: "0–9", teacherArtifactsHeading: "Артефакты",
+    teacherGatesHeading: "0–10", teacherArtifactsHeading: "Артефакты",
     teacherWarn: "Обнаружены BLOCKED/STOP статусы — требуется внимание преподавателя",
     footerSafetyTitle: "Safety — правила безопасности студента",
     footerSafetyList: [
@@ -288,7 +293,7 @@
     artifactsSub: "Қорытынды пакет: аймақтар картасы, чек-лист, жүйе→компонент кестесі, ≥3 ақау карточкасы, Photo-ID, ведомос, акт, хабарлама, safety-log, gate-log, self-report, қорғау, далалық тапсырма.",
     localFileLabel: "жергілікті файл", dash: "—",
     teacherHeading: "Оқытушы режимі — топ/студент прогресінің жиынтығы (демо)",
-    teacherGatesHeading: "0–9", teacherArtifactsHeading: "Артефактілер",
+    teacherGatesHeading: "0–10", teacherArtifactsHeading: "Артефактілер",
     teacherWarn: "BLOCKED/STOP мәртебелері анықталды — оқытушының назары қажет",
     footerSafetyTitle: "Safety — студенттің қауіпсіздік ережелері",
     footerSafetyList: [
@@ -307,7 +312,7 @@
     zoneMapCaption: "Сызба шартты — ол «аймақ» ұғымын пысықтайды, нақты үйдің жоспары емес. Төмендегі тізім сияқты кликтеледі."
   };
 
-  /* Per-screen prose blocks. Keys match SCR-01..SCR-15 (as scr01..scr15). */
+  /* Per-screen prose blocks. Keys match SCR-01..SCR-16 (as scr01..scr16). */
   STR.ru.screenText = {
     scr01: {
       descLabel: "Краткое описание",
@@ -440,7 +445,7 @@
       warn: "<strong>УЧЕБНЫЙ ПРОЕКТ — не официальный документ.</strong> Учебный акт ≠ официальный акт технического обследования.",
       draftBlockLabel: "Черновик учебного акта", generateBtn: "Сформировать черновик из ведомости",
       saveDraftBtn: "Сохранить черновик", artifactLabel: "Артефакт",
-      nextHint: "сборка итогового пакета (SCR-14)",
+      nextHint: "полевая практика на реальном объекте (SCR-14)",
       draftTemplate: function (f) {
         var lines = [];
         lines.push("УЧЕБНЫЙ ПРОЕКТ ТЕХНИЧЕСКОГО АКТА (не официальный документ)");
@@ -456,25 +461,31 @@
     },
     scr14: {
       explanationLabel: "Объяснение",
+      explanation: "7 часов курса (полевой контур, заложенные в COURSE_CANON.md) выполняются не в этом демо, а в реальном приложении HouseMaster Inspector (insp.housemasters.kz), на конкретном МКД, назначенном преподавателем/мастером. Студент повторяет ту же цепочку — зона → система → компонент → наблюдение, — но на настоящем доме и настоящим инструментом, включая построение реальной карты зон.",
+      taskLabel: "Задание студенту",
+      task: "Выполните осмотр назначенного объекта в приложении HouseMaster Inspector и подтвердите выполнение здесь — укажите номер протокола или название экспортированного файла.",
+      fieldTaskPlaceholder: "Номер/ссылка на протокол осмотра или название экспортированного файла (Протокол Word/PDF, CSV)",
+      fieldTaskSubmitBtn: "Отметить полевую практику как отправленную",
+      appBridge: "Доказательством служит экспорт из самого приложения — кнопки «Протокол Word», «Протокол PDF» или «Сохранить CSV» в insp.housemasters.kz.",
+      artifactLabel: "Артефакт",
+      nextHint: "сборка итогового пакета (SCR-15)"
+    },
+    scr15: {
+      explanationLabel: "Объяснение",
       explanation: "Итоговый пакет объединяет все учебные артефакты и журнал прохождения gate. Студент заполняет self-report — короткую рефлексию о выполненной работе.",
       packageTableLabel: "Итоговый пакет — артефакты",
       gateLogTableLabel: "Gate-log — журнал прохождения контрольных точек",
       selfReportLabel: "Self-report",
       selfReportPlaceholder: "Короткая рефлексия студента о ходе осмотра, сложностях, выводах (без экспертных заключений)",
       saveSelfReportBtn: "Сохранить self-report", artifactsLabel: "Артефакты",
-      fieldTaskLabel: "Полевое задание — практика на реальном объекте",
-      fieldTaskExplanation: "7 часов курса (полевой контур) выполняются не в этом демо, а в реальном приложении HouseMaster Inspector (insp.housemasters.kz), на конкретном МКД, назначенном преподавателем/мастером. Студент повторяет ту же цепочку — зона → система → компонент → наблюдение, — но на настоящем доме и настоящим инструментом, включая построение реальной карты зон.",
-      fieldTaskPlaceholder: "Номер/ссылка на протокол осмотра или название экспортированного файла (Протокол Word/PDF, CSV)",
-      fieldTaskSubmitBtn: "Отметить полевое задание как отправленное",
-      appBridge: "Доказательством служит экспорт из самого приложения — кнопки «Протокол Word», «Протокол PDF» или «Сохранить CSV» в insp.housemasters.kz.",
-      nextHint: "итоговая защита (SCR-15)"
+      nextHint: "итоговая защита (SCR-16)"
     },
-    scr15: {
+    scr16: {
       explanationLabel: "Объяснение",
       explanation: "Итоговая защита — демонстрация собранного пакета преподавателю/комиссии. Ниже — сводная готовность по всем контрольным точкам курса.",
       readinessLabel: "Готовность к защите",
-      readyText: "Все Gate 0–9 пройдены (PASS), критических блокировок нет. Пакет готов к защите.",
-      notReadyText: "Не все Gate 0–9 в статусе PASS, либо есть BLOCKED/STOP — для демонстрации это нормально, курс можно пройти повторно (REDO ≠ провал).",
+      readyText: "Все Gate 0–10 пройдены (PASS), критических блокировок нет. Пакет готов к защите.",
+      notReadyText: "Не все Gate 0–10 в статусе PASS, либо есть BLOCKED/STOP — для демонстрации это нормально, курс можно пройти повторно (REDO ≠ провал).",
       actionLabel: "Действие", confirmBtn: "Отметить: защита пройдена",
       artifactLabel: "Артефакт",
       nextHint: "курс завершён — используйте Reset для повторного показа демо"
@@ -613,7 +624,7 @@
       warn: "<strong>ОҚУ ЖОБАСЫ — ресми құжат емес.</strong> Оқу актісі ≠ техникалық тексерудің ресми актісі.",
       draftBlockLabel: "Оқу актісінің жобасы", generateBtn: "Ведомостан жоба құрастыру",
       saveDraftBtn: "Жобаны сақтау", artifactLabel: "Артефакт",
-      nextHint: "қорытынды пакетті жинау (SCR-14)",
+      nextHint: "нақты объектідегі далалық практика (SCR-14)",
       draftTemplate: function (f) {
         var lines = [];
         lines.push("ТЕХНИКАЛЫҚ АКТІНІҢ ОҚУ ЖОБАСЫ (ресми құжат емес)");
@@ -629,25 +640,31 @@
     },
     scr14: {
       explanationLabel: "Түсіндірме",
+      explanation: "Курстың 7 сағаты (далалық контур, COURSE_CANON.md-де бекітілген) осы демода емес, нақты HouseMaster Inspector қолданбасында (insp.housemasters.kz), оқытушы/мастер тағайындаған нақты МКД-да орындалады. Студент сол тізбекті — аймақ → жүйе → компонент → байқау — қайталайды, бірақ нақты үйде және нақты құралмен, соның ішінде нақты аймақтар картасын құру арқылы.",
+      taskLabel: "Студентке тапсырма",
+      task: "Тағайындалған объектіні HouseMaster Inspector қолданбасында қарап-тексеріңіз және орындалғанын осында растаңыз — хаттама нөмірін немесе экспортталған файл атауын көрсетіңіз.",
+      fieldTaskPlaceholder: "Қарап-тексеру хаттамасының нөмірі/сілтемесі немесе экспортталған файлдың атауы (Протокол Word/PDF, CSV)",
+      fieldTaskSubmitBtn: "Далалық практиканы жіберілді деп белгілеу",
+      appBridge: "Дәлел ретінде қолданбаның өзіндегі экспорт қызмет етеді — insp.housemasters.kz ішіндегі «Протокол Word», «Протокол PDF» немесе «CSV сақтау» түймелері.",
+      artifactLabel: "Артефакт",
+      nextHint: "қорытынды пакетті жинау (SCR-15)"
+    },
+    scr15: {
+      explanationLabel: "Түсіндірме",
       explanation: "Қорытынды пакет барлық оқу артефактілерін және gate өту журналын біріктіреді. Студент self-report толтырады — орындалған жұмыс туралы қысқа рефлексия.",
       packageTableLabel: "Қорытынды пакет — артефактілер",
       gateLogTableLabel: "Gate-log — бақылау нүктелерінен өту журналы",
       selfReportLabel: "Self-report",
       selfReportPlaceholder: "Студенттің қарап-тексеру барысы, қиындықтары, қорытындылары туралы қысқа рефлексиясы (сараптамалық қорытындысыз)",
       saveSelfReportBtn: "Self-report сақтау", artifactsLabel: "Артефактілер",
-      fieldTaskLabel: "Далалық тапсырма — нақты объектідегі практика",
-      fieldTaskExplanation: "Курстың 7 сағаты (далалық контур) осы демода емес, нақты HouseMaster Inspector қолданбасында (insp.housemasters.kz), оқытушы/мастер тағайындаған нақты МКД-да орындалады. Студент сол тізбекті — аймақ → жүйе → компонент → байқау — қайталайды, бірақ нақты үйде және нақты құралмен, соның ішінде нақты аймақтар картасын құру арқылы.",
-      fieldTaskPlaceholder: "Қарап-тексеру хаттамасының нөмірі/сілтемесі немесе экспортталған файлдың атауы (Протокол Word/PDF, CSV)",
-      fieldTaskSubmitBtn: "Далалық тапсырманы жіберілді деп белгілеу",
-      appBridge: "Дәлел ретінде қолданбаның өзіндегі экспорт қызмет етеді — insp.housemasters.kz ішіндегі «Протокол Word», «Протокол PDF» немесе «CSV сақтау» түймелері.",
-      nextHint: "қорытынды қорғау (SCR-15)"
+      nextHint: "қорытынды қорғау (SCR-16)"
     },
-    scr15: {
+    scr16: {
       explanationLabel: "Түсіндірме",
       explanation: "Қорытынды қорғау — жиналған пакетті оқытушыға/комиссияға көрсету. Төменде курстың барлық бақылау нүктелері бойынша жиынтық дайындық көрсетілген.",
       readinessLabel: "Қорғауға дайындық",
-      readyText: "Барлық Gate 0–9 өтілді (PASS), сыни бұғаттаулар жоқ. Пакет қорғауға дайын.",
-      notReadyText: "Барлық Gate 0–9 PASS мәртебесінде емес немесе BLOCKED/STOP бар — демонстрация үшін бұл қалыпты жағдай, курсты қайта өтуге болады (REDO ≠ сәтсіздік).",
+      readyText: "Барлық Gate 0–10 өтілді (PASS), сыни бұғаттаулар жоқ. Пакет қорғауға дайын.",
+      notReadyText: "Барлық Gate 0–10 PASS мәртебесінде емес немесе BLOCKED/STOP бар — демонстрация үшін бұл қалыпты жағдай, курсты қайта өтуге болады (REDO ≠ сәтсіздік).",
       actionLabel: "Әрекет", confirmBtn: "Белгілеу: қорғау өтті",
       artifactLabel: "Артефакт",
       nextHint: "курс аяқталды — демоны қайта көрсету үшін Reset пайдаланыңыз"
@@ -1300,9 +1317,23 @@
     });
   }
 
-  // SCR-14 — Итоговый пакет
+  // SCR-14 — Полевая практика
   SCREEN_RENDERERS[13] = function () {
     var s = st().scr14;
+    var body =
+      block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
+      taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p>" +
+        '<div class="field" style="margin-top:10px;"><input type="text" id="fieldTaskRefInput" data-action="input-field-task-ref" value="' + escapeHtml(state.fieldTaskRef) + '" placeholder="' + escapeHtml(s.fieldTaskPlaceholder) + '"></div>' +
+        '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="submit-field-task">' + escapeHtml(s.fieldTaskSubmitBtn) + "</button></div>" +
+        appBridgeHtml(s.appBridge)) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.fieldEvidence")) + " " + tag(state.artifacts.fieldEvidence)) +
+      gateBlock("G9");
+    return screenShell(13, body, { nextHint: s.nextHint });
+  };
+
+  // SCR-15 — Итоговый пакет
+  SCREEN_RENDERERS[14] = function () {
+    var s = st().scr15;
     var artifactRows = ARTIFACTS_DEF.map(function (a) {
       return "<tr><td>" + escapeHtml(t("artifacts." + a)) + "</td><td>" + tag(state.artifacts[a]) + "</td></tr>";
     }).join("");
@@ -1313,28 +1344,23 @@
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       block(s.packageTableLabel, '<div style="overflow-x:auto;"><table class="data-table">' + artifactRows + "</table></div>") +
       block(s.gateLogTableLabel, '<div style="overflow-x:auto;"><table class="data-table">' + gateRows + "</table></div>") +
-      taskBlock(s.fieldTaskLabel, "<p>" + escapeHtml(s.fieldTaskExplanation) + "</p>" +
-        '<div class="field" style="margin-top:10px;"><input type="text" id="fieldTaskRefInput" data-action="input-field-task-ref" value="' + escapeHtml(state.fieldTaskRef) + '" placeholder="' + escapeHtml(s.fieldTaskPlaceholder) + '"></div>' +
-        '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="submit-field-task">' + escapeHtml(s.fieldTaskSubmitBtn) + "</button></div>" +
-        appBridgeHtml(s.appBridge) +
-        '<div style="margin-top:8px;">' + escapeHtml(t("artifacts.fieldEvidence")) + " " + tag(state.artifacts.fieldEvidence) + "</div>") +
       block(s.selfReportLabel, '<textarea id="selfReportInput" rows="5" placeholder="' + escapeHtml(s.selfReportPlaceholder) + '">' + escapeHtml(state.selfReportText) + "</textarea>" +
         '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="save-self-report">' + escapeHtml(s.saveSelfReportBtn) + "</button></div>") +
       block(s.artifactsLabel, escapeHtml(t("artifacts.gateLog")) + " " + tag(state.artifacts.gateLog) + " · " + escapeHtml(t("artifacts.selfReport")) + " " + tag(state.artifacts.selfReport));
-    return screenShell(13, body, { nextHint: s.nextHint });
+    return screenShell(14, body, { nextHint: s.nextHint });
   };
 
-  // SCR-15 — Защита / результат
-  SCREEN_RENDERERS[14] = function () {
-    var s = st().scr15;
+  // SCR-16 — Защита / результат
+  SCREEN_RENDERERS[15] = function () {
+    var s = st().scr16;
     var ready = gatesPassCount() === GATES_DEF.length && !anyStopOrBlocked();
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       block(s.readinessLabel, '<p class="callout ' + (ready ? "fact" : "hypo") + '">' + escapeHtml(ready ? s.readyText : s.notReadyText) + "</p>") +
       block(s.actionLabel, '<button type="button" class="btn btn-primary" data-action="confirm-defense">' + escapeHtml(s.confirmBtn) + "</button> " + (state.defenseConfirmed ? tag("PASS") : "")) +
       block(s.artifactLabel, escapeHtml(t("artifacts.finalDefense")) + " " + tag(state.artifacts.finalDefense)) +
-      gateBlock("G9");
-    return screenShell(14, body, { nextLabel: t("ui.nextBtn"), nextHint: s.nextHint });
+      gateBlock("G10");
+    return screenShell(15, body, { nextLabel: t("ui.nextBtn"), nextHint: s.nextHint });
   };
 
   /* ----------------------------- Main render ----------------------------- */
@@ -1500,7 +1526,7 @@
       case "confirm-defense":
         state.defenseConfirmed = true;
         state.artifacts.finalDefense = "PASS";
-        state.gates.G9 = "PASS";
+        state.gates.G10 = "PASS";
         render();
         break;
 

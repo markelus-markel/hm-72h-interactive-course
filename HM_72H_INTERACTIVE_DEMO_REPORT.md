@@ -1,7 +1,20 @@
-# HM_72H Interactive Course Demo — Implementation Report v1.6
+# HM_72H Interactive Course Demo — Implementation Report v1.7
 
 ## Changelog
 
+- **v1.7 (dedicated field-practice screen + Gate):** Promotes the v1.6 field-task block from
+  an inline block on the итоговый пакет screen into its own screen and Gate — the heavier
+  option explicitly deferred in v1.6's "Scope decisions" ("it would renumber the course's
+  screen count (15→16) and Gate count (10→11), which is a canon change, not a demo tweak"),
+  now implemented on explicit request. New **SCR-14 "Полевая практика"** carries the field-task
+  explanation, the protocol-reference input, the submit button, the `fieldEvidence` artifact
+  status, and its own gate, **G9** ("Полевая практика подтверждена"). The old SCR-14 (итоговый
+  пакет) shifts to **SCR-15**, the old SCR-15 (защита) shifts to **SCR-16**, and the old G9
+  ("итоговая защита") is renumbered to **G10** so the field-practice gate can take the G9 slot
+  right after G8 (SCR-13). The course is now 16 screens and 11 gates (G0–G10). No artifact ID
+  changed, no new artifact was added (`fieldEvidence` already existed from v1.6), and no
+  backend/export feature was added. See "What changed (v1.7 dedicated field-practice
+  screen + Gate)" below.
 - **v1.6 (zone-map diagram + field-task bridge):** Two linked additions, requested together
   to connect the digital demo to real fieldwork with the HouseMaster Inspector app
   (`insp.housemasters.kz`):
@@ -112,26 +125,27 @@ Open `index.html` in a desktop browser — no build step, no server, no installa
 Follow `DEMO_SCRIPT.md` (7–10 minutes). See the "How to demonstrate" section of `README.md`
 for a step-by-step walkthrough matching the demo script.
 
-## Screens implemented (15/15)
+## Screens implemented (16/16)
 
 SCR-01 Старт курса · SCR-02 Роль студента и safety · SCR-03 Карта МКД как объекта ·
 SCR-04 Зоны дома · SCR-05 Инженерные системы · SCR-06 Система → компонент ·
 SCR-07 Видимый признак / симптом · SCR-08 Фотофиксация / Photo-ID · SCR-09 Карточка дефекта ·
 SCR-10 Риск · SCR-11 Безопасное действие · SCR-12 Дефектная ведомость ·
-SCR-13 Учебный проект технического акта · SCR-14 Итоговый пакет · SCR-15 Защита / результат.
+SCR-13 Учебный проект технического акта · **SCR-14 Полевая практика (v1.7)** ·
+SCR-15 Итоговый пакет · SCR-16 Защита / результат.
 
 Each screen shows: screen ID + title, current module (with hours), a short explanation, the
 student task, the artifact(s) produced, PASS/REDO/BLOCKED/STOP gate controls (where a gate
 applies to that screen), and a "Далее: …" next-action hint plus Prev/Next navigation. The
-left sidebar lists all 15 screens grouped by module, highlights the current screen, and shows
+left sidebar lists all 16 screens grouped by module, highlights the current screen, and shows
 a small color-coded dot per screen reflecting its linked gate's status. The header shows a
 persistent course status panel: screens hours/modules, screen counter, gate PASS count,
 overall progress bar, and a BLOCKED/STOP warning chip when relevant.
 
-## Gates implemented (10/10)
+## Gates implemented (11/11)
 
-G0–G9 are all present as visible control points, each tied to the screen named in
-`TASK_FOR_CLAUDE.md`:
+G0–G10 are all present as visible control points, each tied to the screen named in
+`TASK_FOR_CLAUDE.md` (G9/G10 as renumbered in v1.7 — see changelog):
 
 - G0 (role/safety) — SCR-02, auto-set to PASS when the safety checkbox is confirmed (also
   settable manually)
@@ -144,8 +158,10 @@ G0–G9 are all present as visible control points, each tied to the screen named
 - G7 (risk + safe action defined) — SCR-11, auto-set to PASS when a neutral message is saved
   with both a risk and an action chosen
 - G8 (defect statement assembled) — SCR-13, auto-set to PASS when the act draft is saved
-- G9 (final package ready for defense) — SCR-15, set to PASS when "защита пройдена" is
-  confirmed
+- G9 (field practice confirmed) — **SCR-14 (v1.7)**, set to PASS/REDO/BLOCKED/STOP manually
+  by the teacher/master after reviewing the student's submitted field-task reference
+- G10 (final package ready for defense) — SCR-16 (shifted from SCR-15 in v1.7, was G9 before
+  v1.7), set to PASS when "защита пройдена" is confirmed
 
 Every gate also exposes all six statuses (NOT STARTED / IN PROGRESS / PASS / REDO / BLOCKED /
 STOP) as explicit buttons, so a teacher can demonstrate any gate behavior manually at any time,
@@ -153,9 +169,10 @@ independent of the auto-suggestions above.
 
 ## Artifact tracker behavior
 
-All 12 required artifacts (карта зон, маршрутный чек-лист, таблица «система → компонент»,
+All 13 required artifacts (карта зон, маршрутный чек-лист, таблица «система → компонент»,
 карточки дефекта (мин. 3), Photo-ID, дефектная ведомость, учебный проект технического акта,
-нейтральное сообщение ответственному лицу, safety-log, gate-log, self-report, итоговая защита)
+нейтральное сообщение ответственному лицу, safety-log, gate-log, **полевое задание
+(подтверждение) — v1.6 addition, own screen/Gate since v1.7**, self-report, итоговая защита)
 are listed in the always-visible right-hand panel, each with a status dropdown
 (NOT STARTED / DRAFT / SUBMITTED / PASS / REDO / BLOCKED). Several artifacts auto-update their
 status as the student progresses (e.g. selecting a zone moves the route checklist to DRAFT/
@@ -487,6 +504,73 @@ than simulate it.
 - No screen was renumbered, no Gate↔screen mapping changed, no existing artifact ID/label
   changed, and no backend/export/upload feature was added — "submitting" the field task only
   records a reference string in the browser, same as every other text field in this demo.
+
+## What changed (v1.7 dedicated field-practice screen + Gate)
+
+Promotes the v1.6 field-task block into its own screen and Gate — the heavier option
+explicitly scoped out of v1.6 ("Scope decisions"), now implemented on explicit request
+after discussing both the lighter (3A, shipped as v1.6) and heavier (3B/"Option B") designs.
+
+**Renumbering**
+
+- `SCREENS` gained a new entry: `{ scr: "SCR-14", moduleId: 8, gate: "G9" }`, inserted right
+  after SCR-13 (module 8 continues; this field-practice screen does not belong to a new
+  module, it is still the course's own field/object contour inside module 8).
+- The old SCR-14 (итоговый пакет) and SCR-15 (защита) both shift up one slot, to SCR-15 and
+  SCR-16 respectively.
+- `GATES_DEF` gained `G10`. **G9 changed meaning**: it was "итоговая защита confirmed"
+  before v1.7, it is now "field practice confirmed". The old G9 meaning moved to the new
+  `G10`. This is the one genuinely irreversible-looking part of the change — any external
+  reference to "Gate 9" from before v1.7 meant defense-readiness; from v1.7 on it means
+  field-practice confirmation.
+- `confirm-defense`'s handler was updated from `state.gates.G9 = "PASS"` to
+  `state.gates.G10 = "PASS"`.
+- The teacher panel's "Gate 0–9" heading was updated to "Gate 0–10".
+- `SCREEN_RENDERERS` was re-sliced accordingly: index 13 is now the new field-practice
+  screen, index 14 is итоговый пакет (unchanged content, just shifted), index 15 is защита
+  (unchanged content, just shifted, now reads `gateBlock("G10")` instead of `gateBlock("G9")`).
+
+**New SCR-14 "Полевая практика"**
+
+- Carries forward, almost verbatim, the explanation/task text that lived inline on the old
+  SCR-14 in v1.6 (the course's own "field/object contour: 7ч" from `COURSE_CANON.md`, done
+  for real in `insp.housemasters.kz` on a real МКД assigned by the teacher/master) — same
+  `fieldTaskRefInput` input and `submit-field-task` action, same `fieldEvidence` artifact
+  (no new artifact added; it already existed from v1.6), same `.app-bridge-hint` naming the
+  real app's export buttons as the evidence mechanism.
+- New: its own `gateBlock("G9")`, so a teacher/master can explicitly PASS/REDO/BLOCK/STOP the
+  field-practice step on its own, independent of the итоговый пакет screen — this is the
+  concrete capability the lighter v1.6 design didn't have (there, the field task had no gate
+  of its own; a teacher could only react to the artifact's DRAFT/SUBMITTED status, with no
+  dedicated PASS/REDO/BLOCKED/STOP control tied specifically to field practice).
+- `nextHint` now points to "сборка итогового пакета (SCR-15)" (was "SCR-14" before the shift).
+
+**Shifted SCR-15 (итоговый пакет) and SCR-16 (защита)**
+
+- SCR-15: identical content to the old SCR-14, minus the field-task UI (which moved out to
+  the new SCR-14) — still shows the artifact package table (now including the `fieldEvidence`
+  row, same as before) and the gate-log table, and the self-report block.
+- SCR-16: identical content to the old SCR-15, just reading Gate G10 instead of G9 for its
+  readiness check and its own `gateBlock`.
+
+**Verification**
+
+- `smoke_check.js`'s full screen-walk was updated from 15 to 16 iterations (RU+KZ).
+- `smoke_check_v16.js`'s field-task checks were rewritten to target the new three-screen
+  split: SCR-14 (field-task input/button + its own Gate G9 controls present; submitting sets
+  `fieldEvidence` to SUBMITTED, visible on that same screen), SCR-15 (no duplicate field-task
+  input; the `fieldEvidence` row appears correctly in the package table), SCR-16 (Gate G10
+  present, not G9; confirming defense shows a PASS tag). All 12 checks in `smoke_check.js` and
+  all 20 checks in `smoke_check_v16.js` pass against the v1.7 build.
+
+**What was not changed**
+
+- No new artifact was added — `fieldEvidence` already existed from v1.6; v1.7 only gave it a
+  dedicated screen and gate instead of an inline block.
+- No backend/export/upload feature was added — "submitting" the field task still only
+  records a reference string in the browser.
+- The real-app terminology bridge (v1.5) and the zone-map SVG diagram (v1.6, on SCR-03/
+  SCR-04) are untouched by this change.
 
 ## Scope confirmation
 
