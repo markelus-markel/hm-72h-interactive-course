@@ -245,6 +245,18 @@ button{font-family:inherit;}
   border-radius:4px;padding:5px 8px;margin-top:8px;line-height:1.4;
 }
 
+/* "Карта зон" visual artifact: a schematic (not literal) house diagram whose regions are
+   clickable the same way as the SCR-04 zone chips (same toggle-zone action/state). */
+.zonemap-wrap{margin-top:8px;max-width:420px;}
+.zonemap-svg{width:100%;height:auto;display:block;}
+.zonemap-zone{fill:#eef2f5;stroke:#c7d0d8;stroke-width:1.5;cursor:pointer;transition:fill .15s,stroke .15s;}
+.zonemap-zone:hover{stroke:var(--accent-blue);}
+.zonemap-zone.selected{fill:var(--accent-green);fill-opacity:.32;stroke:var(--accent-green-dark);stroke-width:2;}
+.zonemap-deco{fill:#dbe8f0;stroke:#b9c7d1;stroke-width:.5;pointer-events:none;}
+.zonemap-mark-bg{fill:var(--accent-green-dark);pointer-events:none;}
+.zonemap-mark-check{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}
+.zonemap-caption{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4;max-width:420px;}
+
 .tag{
   display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:600;color:#fff;
 }

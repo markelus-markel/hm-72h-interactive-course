@@ -31,6 +31,18 @@
 
   var ZONES = [{ id: "entrance" }, { id: "roof" }, { id: "basement" }, { id: "yard" }, { id: "facade" }, { id: "utility" }];
 
+  // Schematic (not a real floor plan) shapes for the "Карта зон" visual artifact — a simple
+  // house silhouette whose regions are clickable (same toggle-zone action as the SCR-04 chip
+  // list) and light up to match state.zones. markX/markY place a small selected-checkmark.
+  var ZONE_SHAPES = [
+    { id: "yard", tag: "rect", attrs: 'x="10" y="196" width="320" height="24" rx="2"', markX: 300, markY: 208 },
+    { id: "basement", tag: "rect", attrs: 'x="90" y="180" width="160" height="16"', markX: 220, markY: 188 },
+    { id: "facade", tag: "rect", attrs: 'x="90" y="70" width="160" height="110" rx="2"', markX: 108, markY: 88 },
+    { id: "roof", tag: "polygon", attrs: 'points="84,70 256,70 232,38 108,38"', markX: 170, markY: 54 },
+    { id: "entrance", tag: "rect", attrs: 'x="150" y="142" width="30" height="38" rx="2"', markX: 165, markY: 161 },
+    { id: "utility", tag: "rect", attrs: 'x="262" y="150" width="50" height="46" rx="2"', markX: 287, markY: 173 }
+  ];
+
   var SYSTEMS = [
     { id: "water_supply", components: ["riser_cold", "riser_hot", "valve", "meter", "fitting"] },
     { id: "sewage", components: ["riser_sewage", "revision", "fan_pipe"] },
@@ -71,7 +83,7 @@
   var GATES_DEF = ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"];
   var ARTIFACTS_DEF = [
     "zoneMap", "routeChecklist", "sysCompTable", "defectCards", "photoId", "defectStatement",
-    "actDraft", "neutralMessage", "safetyLog", "gateLog", "selfReport", "finalDefense"
+    "actDraft", "neutralMessage", "safetyLog", "gateLog", "selfReport", "finalDefense", "fieldEvidence"
   ];
 
   var PERSIST_KEY = "hm72h_demo_state_v1";
@@ -127,14 +139,16 @@
     defectCards: "Карточки дефекта (минимум 3)", photoId: "Photo-ID (идентификатор фото)",
     defectStatement: "Дефектная ведомость", actDraft: "Учебный проект технического акта",
     neutralMessage: "Нейтральное сообщение ответственному лицу", safetyLog: "Safety-log",
-    gateLog: "Gate-log", selfReport: "Self-report", finalDefense: "Итоговая защита"
+    gateLog: "Gate-log", selfReport: "Self-report", finalDefense: "Итоговая защита",
+    fieldEvidence: "Полевое задание (подтверждение)"
   };
   STR.kz.artifacts = {
     zoneMap: "Аймақтар картасы", routeChecklist: "Маршруттық чек-лист", sysCompTable: "«Жүйе → компонент» кестесі",
     defectCards: "Ақау карточкалары (кемінде 3)", photoId: "Photo-ID (фото идентификаторы)",
     defectStatement: "Ақаулар ведомосі", actDraft: "Техникалық актінің оқу жобасы",
     neutralMessage: "Жауапты тұлғаға бейтарап хабарлама", safetyLog: "Safety-log",
-    gateLog: "Gate-log", selfReport: "Self-report", finalDefense: "Қорытынды қорғау"
+    gateLog: "Gate-log", selfReport: "Self-report", finalDefense: "Қорытынды қорғау",
+    fieldEvidence: "Далалық тапсырма (растау)"
   };
 
   STR.ru.zones = {
@@ -232,7 +246,7 @@
     kzDraftNote: "Казахская версия — draft. Требуется языковая и методическая проверка.",
     prevBtn: "← Назад", nextBtn: "Далее →", nextHintPrefix: "Далее: ",
     artifactsTitle: "Трекер артефактов студента",
-    artifactsSub: "Итоговый пакет: карта зон, чек-лист, таблица система→компонент, ≥3 карточки дефекта, Photo-ID, ведомость, акт, сообщение, safety-log, gate-log, self-report, защита.",
+    artifactsSub: "Итоговый пакет: карта зон, чек-лист, таблица система→компонент, ≥3 карточки дефекта, Photo-ID, ведомость, акт, сообщение, safety-log, gate-log, self-report, защита, полевое задание.",
     localFileLabel: "локальный файл", dash: "—",
     teacherHeading: "Режим преподавателя — сводка прогресса группы/студента (демо)",
     teacherGatesHeading: "0–9", teacherArtifactsHeading: "Артефакты",
@@ -249,7 +263,9 @@
     footerNote: "Учебный акт и учебные артефакты — образовательные материалы, не официальные документы и не экспертное заключение.",
     stopTitle: "⛔ STOP (остановка по безопасности) — небезопасная / нештатная ситуация",
     stopP1: "Симуляция небезопасной ситуации активирована. Согласно правилам курса, студент <strong>останавливает любые действия</strong>, не продолжает осмотр самостоятельно и сообщает о ситуации преподавателю / мастеру.",
-    stopP2: "Продолжение работы в демо заблокировано до сброса."
+    stopP2: "Продолжение работы в демо заблокировано до сброса.",
+    zoneMapAria: "Схематичная карта зон дома (кликабельная)",
+    zoneMapCaption: "Схема условна — она отрабатывает понятие «зона», а не план конкретного дома. Кликабельна так же, как список ниже."
   };
   STR.kz.ui = {
     pageTitle: "HM_72H — Интерактивті демо-курс «Хаузмастер МКД»",
@@ -269,7 +285,7 @@
     kzDraftNote: "Қазақша мәтін — бастапқы нұсқа. Тілдік және әдістемелік тексеруді қажет етеді.",
     prevBtn: "← Артқа", nextBtn: "Келесі →", nextHintPrefix: "Келесі: ",
     artifactsTitle: "Студент артефактілерінің трекері",
-    artifactsSub: "Қорытынды пакет: аймақтар картасы, чек-лист, жүйе→компонент кестесі, ≥3 ақау карточкасы, Photo-ID, ведомос, акт, хабарлама, safety-log, gate-log, self-report, қорғау.",
+    artifactsSub: "Қорытынды пакет: аймақтар картасы, чек-лист, жүйе→компонент кестесі, ≥3 ақау карточкасы, Photo-ID, ведомос, акт, хабарлама, safety-log, gate-log, self-report, қорғау, далалық тапсырма.",
     localFileLabel: "жергілікті файл", dash: "—",
     teacherHeading: "Оқытушы режимі — топ/студент прогресінің жиынтығы (демо)",
     teacherGatesHeading: "0–9", teacherArtifactsHeading: "Артефактілер",
@@ -286,7 +302,9 @@
     footerNote: "Оқу актісі және оқу артефактілері — білім беру материалдары, ресми құжаттар да, сараптамалық қорытынды да емес.",
     stopTitle: "⛔ STOP (қауіпсіздік бойынша тоқтату) — қауіпсіз емес / штаттан тыс жағдай",
     stopP1: "Қауіпсіз емес жағдай симуляциясы іске қосылды. Курс ережелеріне сәйкес студент <strong>кез келген әрекетті тоқтатады</strong>, қарап-тексеруді өз бетінше жалғастырмайды және жағдай туралы оқытушыға / мастерге хабарлайды.",
-    stopP2: "Демодағы жұмысты жалғастыру бастапқы күйге қайтарғанға дейін бұғатталған."
+    stopP2: "Демодағы жұмысты жалғастыру бастапқы күйге қайтарғанға дейін бұғатталған.",
+    zoneMapAria: "Үйдің аймақтар картасының сызбасы (кликтелетін)",
+    zoneMapCaption: "Сызба шартты — ол «аймақ» ұғымын пысықтайды, нақты үйдің жоспары емес. Төмендегі тізім сияқты кликтеледі."
   };
 
   /* Per-screen prose blocks. Keys match SCR-01..SCR-15 (as scr01..scr15). */
@@ -444,6 +462,11 @@
       selfReportLabel: "Self-report",
       selfReportPlaceholder: "Короткая рефлексия студента о ходе осмотра, сложностях, выводах (без экспертных заключений)",
       saveSelfReportBtn: "Сохранить self-report", artifactsLabel: "Артефакты",
+      fieldTaskLabel: "Полевое задание — практика на реальном объекте",
+      fieldTaskExplanation: "7 часов курса (полевой контур) выполняются не в этом демо, а в реальном приложении HouseMaster Inspector (insp.housemasters.kz), на конкретном МКД, назначенном преподавателем/мастером. Студент повторяет ту же цепочку — зона → система → компонент → наблюдение, — но на настоящем доме и настоящим инструментом, включая построение реальной карты зон.",
+      fieldTaskPlaceholder: "Номер/ссылка на протокол осмотра или название экспортированного файла (Протокол Word/PDF, CSV)",
+      fieldTaskSubmitBtn: "Отметить полевое задание как отправленное",
+      appBridge: "Доказательством служит экспорт из самого приложения — кнопки «Протокол Word», «Протокол PDF» или «Сохранить CSV» в insp.housemasters.kz.",
       nextHint: "итоговая защита (SCR-15)"
     },
     scr15: {
@@ -612,6 +635,11 @@
       selfReportLabel: "Self-report",
       selfReportPlaceholder: "Студенттің қарап-тексеру барысы, қиындықтары, қорытындылары туралы қысқа рефлексиясы (сараптамалық қорытындысыз)",
       saveSelfReportBtn: "Self-report сақтау", artifactsLabel: "Артефактілер",
+      fieldTaskLabel: "Далалық тапсырма — нақты объектідегі практика",
+      fieldTaskExplanation: "Курстың 7 сағаты (далалық контур) осы демода емес, нақты HouseMaster Inspector қолданбасында (insp.housemasters.kz), оқытушы/мастер тағайындаған нақты МКД-да орындалады. Студент сол тізбекті — аймақ → жүйе → компонент → байқау — қайталайды, бірақ нақты үйде және нақты құралмен, соның ішінде нақты аймақтар картасын құру арқылы.",
+      fieldTaskPlaceholder: "Қарап-тексеру хаттамасының нөмірі/сілтемесі немесе экспортталған файлдың атауы (Протокол Word/PDF, CSV)",
+      fieldTaskSubmitBtn: "Далалық тапсырманы жіберілді деп белгілеу",
+      appBridge: "Дәлел ретінде қолданбаның өзіндегі экспорт қызмет етеді — insp.housemasters.kz ішіндегі «Протокол Word», «Протокол PDF» немесе «CSV сақтау» түймелері.",
       nextHint: "қорытынды қорғау (SCR-15)"
     },
     scr15: {
@@ -671,6 +699,7 @@
       neutralMessageText: "",
       actDraftText: "",
       selfReportText: "",
+      fieldTaskRef: "",
       defenseConfirmed: false
     };
   }
@@ -983,6 +1012,29 @@
     return text ? '<div class="app-bridge-hint">🔗 ' + escapeHtml(text) + "</div>" : "";
   }
 
+  // Renders the "Карта зон" visual artifact: a schematic house diagram whose regions toggle
+  // the same state.zones selection as the SCR-04 chip list (clicking the diagram works the
+  // same as clicking a chip — both use data-action="toggle-zone"). Decorative-only window
+  // rects use pointer-events:none in CSS so they never swallow a click meant for the facade.
+  function renderZoneMapDiagram() {
+    var windowsHtml = [85, 115, 145].map(function (wy) {
+      return [115, 150, 185, 220].map(function (wx) {
+        return '<rect x="' + wx + '" y="' + wy + '" width="14" height="16" rx="1" class="zonemap-deco"/>';
+      }).join("");
+    }).join("");
+    var shapesHtml = ZONE_SHAPES.map(function (z) {
+      var selected = state.zones.indexOf(z.id) !== -1;
+      var title = escapeHtml(t("zones." + z.id + ".title"));
+      var mark = selected
+        ? '<circle cx="' + z.markX + '" cy="' + z.markY + '" r="8" class="zonemap-mark-bg"/><path d="M' + (z.markX - 4) + " " + z.markY + " l3 4 l6 -8" + '" class="zonemap-mark-check"/>'
+        : "";
+      return "<" + z.tag + " " + z.attrs + ' class="zonemap-zone' + (selected ? " selected" : "") + '" data-action="toggle-zone" data-zone="' + z.id + '"><title>' + title + "</title></" + z.tag + ">" + mark;
+    }).join("");
+    return '<div class="zonemap-wrap"><svg viewBox="0 0 340 230" class="zonemap-svg" role="img" aria-label="' + escapeHtml(t("ui.zoneMapAria")) + '">' +
+      windowsHtml + shapesHtml + "</svg></div>" +
+      '<p class="zonemap-caption">' + escapeHtml(t("ui.zoneMapCaption")) + "</p>";
+  }
+
   var SCREEN_RENDERERS = [];
 
   // SCR-01 — Старт курса
@@ -1029,7 +1081,7 @@
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       taskBlock(s.taskLabel, '<div class="chips-row">' + chips + "</div>") +
-      block(s.artifactLabel, escapeHtml(t("artifacts.zoneMap")) + " " + tag(state.artifacts.zoneMap) + appBridgeHtml(s.appBridge)) +
+      block(s.artifactLabel, escapeHtml(t("artifacts.zoneMap")) + " " + tag(state.artifacts.zoneMap) + renderZoneMapDiagram() + appBridgeHtml(s.appBridge)) +
       gateBlock("G1");
     return screenShell(2, body, { nextHint: s.nextHint });
   };
@@ -1045,7 +1097,7 @@
     }).join("");
     var body =
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
-      taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p><div class=\"zone-list\">" + items + "</div>") +
+      taskBlock(s.taskLabel, "<p>" + escapeHtml(s.task) + "</p>" + renderZoneMapDiagram() + "<div class=\"zone-list\">" + items + "</div>") +
       block(s.artifactLabel, escapeHtml(t("artifacts.routeChecklist")) + " " + tag(state.artifacts.routeChecklist) + " · " + escapeHtml(s.selectedZonesWord) + ": " + state.zones.length + appBridgeHtml(s.appBridge)) +
       gateBlock("G2");
     return screenShell(3, body, { nextHint: s.nextHint });
@@ -1261,6 +1313,11 @@
       block(s.explanationLabel, "<p>" + s.explanation + "</p>") +
       block(s.packageTableLabel, '<div style="overflow-x:auto;"><table class="data-table">' + artifactRows + "</table></div>") +
       block(s.gateLogTableLabel, '<div style="overflow-x:auto;"><table class="data-table">' + gateRows + "</table></div>") +
+      taskBlock(s.fieldTaskLabel, "<p>" + escapeHtml(s.fieldTaskExplanation) + "</p>" +
+        '<div class="field" style="margin-top:10px;"><input type="text" id="fieldTaskRefInput" data-action="input-field-task-ref" value="' + escapeHtml(state.fieldTaskRef) + '" placeholder="' + escapeHtml(s.fieldTaskPlaceholder) + '"></div>' +
+        '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="submit-field-task">' + escapeHtml(s.fieldTaskSubmitBtn) + "</button></div>" +
+        appBridgeHtml(s.appBridge) +
+        '<div style="margin-top:8px;">' + escapeHtml(t("artifacts.fieldEvidence")) + " " + tag(state.artifacts.fieldEvidence) + "</div>") +
       block(s.selfReportLabel, '<textarea id="selfReportInput" rows="5" placeholder="' + escapeHtml(s.selfReportPlaceholder) + '">' + escapeHtml(state.selfReportText) + "</textarea>" +
         '<div style="margin-top:8px;"><button type="button" class="btn btn-secondary" data-action="save-self-report">' + escapeHtml(s.saveSelfReportBtn) + "</button></div>") +
       block(s.artifactsLabel, escapeHtml(t("artifacts.gateLog")) + " " + tag(state.artifacts.gateLog) + " · " + escapeHtml(t("artifacts.selfReport")) + " " + tag(state.artifacts.selfReport));
@@ -1339,7 +1396,7 @@
 
       case "select-object":
         state.objectType = el.getAttribute("data-object");
-        state.artifacts.zoneMap = "DRAFT";
+        state.artifacts.zoneMap = state.zones.length ? "SUBMITTED" : "DRAFT";
         render();
         break;
 
@@ -1348,6 +1405,10 @@
         var idx2 = state.zones.indexOf(z);
         if (idx2 === -1) state.zones.push(z); else state.zones.splice(idx2, 1);
         state.artifacts.routeChecklist = state.zones.length ? (state.zones.length >= 2 ? "SUBMITTED" : "DRAFT") : "NOT_STARTED";
+        // "Карта зон" (zoneMap) is the object diagram + the zones marked on it — so it only
+        // becomes a real completed artifact once both an object/case AND at least one zone
+        // are chosen, matching ARTIFACT_MODEL.md listing it as its own deliverable.
+        state.artifacts.zoneMap = state.objectType ? (state.zones.length ? "SUBMITTED" : "DRAFT") : "NOT_STARTED";
         render();
         break;
       }
@@ -1424,6 +1485,18 @@
         break;
       }
 
+      case "submit-field-task": {
+        var fieldRefInput = document.getElementById("fieldTaskRefInput");
+        if (fieldRefInput) state.fieldTaskRef = fieldRefInput.value;
+        // Evidence lives in the real field app (insp.housemasters.kz); this only records that
+        // the student says the field task is done and names where the evidence is — the
+        // teacher/master confirms the real thing separately, same manual-Gate pattern as
+        // the rest of the course.
+        state.artifacts.fieldEvidence = "SUBMITTED";
+        render();
+        break;
+      }
+
       case "confirm-defense":
         state.defenseConfirmed = true;
         state.artifacts.finalDefense = "PASS";
@@ -1478,6 +1551,10 @@
     }
     if (el.matches('[data-action="input-symptom-note"]')) {
       state.symptomNote = el.value;
+      // no re-render needed on every keystroke to keep caret stable; state is enough
+    }
+    if (el.matches('[data-action="input-field-task-ref"]')) {
+      state.fieldTaskRef = el.value;
       // no re-render needed on every keystroke to keep caret stable; state is enough
     }
   }

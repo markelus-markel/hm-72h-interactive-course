@@ -1,7 +1,26 @@
-# HM_72H Interactive Course Demo — Implementation Report v1.5
+# HM_72H Interactive Course Demo — Implementation Report v1.6
 
 ## Changelog
 
+- **v1.6 (zone-map diagram + field-task bridge):** Two linked additions, requested together
+  to connect the digital demo to real fieldwork with the HouseMaster Inspector app
+  (`insp.housemasters.kz`):
+  1. **"Карта зон" is now a real visual artifact** (SCR-03/SCR-04), not just a status tag — a
+     small clickable SVG house diagram that highlights the zones chosen in the existing
+     SCR-04 chip list (and can be clicked directly, same `toggle-zone` action/state). The
+     `zoneMap` artifact's own status now reflects both an object AND at least one zone being
+     chosen (previously it went to DRAFT on object selection alone and never advanced).
+  2. **A field-task block on SCR-14** makes the course's own "field/object contour: 7ч"
+     (COURSE_CANON.md) concrete: explains that this part happens for real, in
+     `insp.housemasters.kz`, on a real МКД, and collects a protocol reference/export filename
+     as the student's claim that it's done (teacher verification stays manual, same as every
+     other artifact). Adds one new artifact, `fieldEvidence` — **a genuine addition to the
+     12-artifact canon in ARTIFACT_MODEL.md, flagged there for methodist confirmation**, same
+     as the KZ-draft flag pattern used for translations.
+  No screen/Gate was renumbered, no existing artifact's ID changed, and no backend was added
+  — the diagram is pure SVG+CSS/state, and the field task is a text field + manual status,
+  identical in spirit to the self-report/neutral-message pattern already in the course. See
+  "What changed (v1.6 zone-map diagram + field-task bridge)" below.
 - **v1.5 (real-app terminology bridge):** Added a short, visually distinct note ("🔗 ...")
   under the artifact status on 7 screens (SCR-03, SCR-04, SCR-05, SCR-06, SCR-07, SCR-08,
   SCR-09), naming the matching field/column in the real HouseMaster Inspector field app
@@ -401,6 +420,73 @@ something tied to a real skill.
   instead — renaming "Карта зон" itself was considered and rejected as more likely to confuse
   than clarify, since the artifact ID and existing label are already referenced elsewhere
   (teacher panel, final package table).
+
+## What changed (v1.6 zone-map diagram + field-task bridge)
+
+Two scoped additions, chosen over heavier alternatives on purpose (see "Scope decisions"
+below), implementing students practicing in a real МКД with HouseMaster Inspector and
+drawing real zone maps there — the course needed to connect to that real-world step rather
+than simulate it.
+
+**1. "Карта зон" visual artifact (SCR-03 / SCR-04)**
+
+- New `ZONE_SHAPES` config + `renderZoneMapDiagram()` in `app.js`: a small inline-SVG house
+  schematic (roof / facade / entrance / basement / yard / a separate utility-room box) with
+  decorative window rects (`pointer-events:none`, so they never block a click meant for the
+  facade underneath).
+- Each shape carries the *same* `data-action="toggle-zone" data-zone="..."` attributes as the
+  existing SCR-04 chip list, so clicking the diagram and clicking a chip do the exact same
+  thing to `state.zones` — no new event-handling logic, no parallel state.
+- A selected zone gets a green fill + a checkmark badge (not color alone, for colorblind
+  accessibility) and a `<title>` tooltip with the zone's localized name.
+- Explicitly labeled **schematic, not a real floor plan** (`ui.zoneMapCaption`, shown under
+  the diagram in both languages) — it teaches the *concept* of a zone, it is not a stand-in
+  for the real building plan students will work with in the field.
+- `zoneMap` artifact status logic changed: it now reaches DRAFT only once an object/case is
+  chosen, and SUBMITTED once at least one zone is also chosen (previously it jumped to DRAFT
+  on object selection alone and never moved past that, which is what made it read as a
+  "broken" status tag before this change).
+- Rendered on both SCR-03 (object screen, shows the diagram building toward completion) and
+  SCR-04 (zone screen, the diagram is the primary visual, the chip list stays as the
+  accessible/keyboard-equivalent control).
+
+**2. Field-task block (SCR-14, new `fieldEvidence` artifact)**
+
+- A new `taskBlock` on SCR-14 explains, in both languages, that the course's own "field/object
+  contour: 7ч" (already in `COURSE_CANON.md`'s hour balance, previously not represented
+  anywhere in the digital demo) happens for real: in `insp.housemasters.kz`, on a real МКД
+  assigned by the teacher/master, repeating the same dом→зона→система→компонент chain —
+  including drawing a real zone map there with the real tool.
+- One text input (`fieldTaskRefInput`) collects a protocol reference or export filename; one
+  button (`submit-field-task`) sets the new `fieldEvidence` artifact to SUBMITTED. This
+  records the student's claim, not a verified fact — exactly like `neutralMessage` and
+  `selfReport` already work in this course; the teacher/master still confirms the real thing
+  separately and manually.
+- A bridge hint (reusing the v1.5 `.app-bridge-hint` style) names the concrete evidence
+  mechanism: the real app's own "Протокол Word" / "Протокол PDF" / "Сохранить CSV" export
+  buttons.
+- `fieldEvidence` was appended to `ARTIFACTS_DEF`, so it appears automatically in the
+  existing SCR-14 artifact-package table and the sidebar artifact tracker — no new table/UI
+  needed there.
+
+**Scope decisions (both features)**
+
+- Zone map: a clickable schematic (this) was chosen over (a) a literal per-floor plan editor
+  or (b) a freehand/canvas drawing tool. (b) was rejected specifically because it would
+  duplicate, with lower fidelity, the real drawing the student will do with the real tool in
+  the field — better to keep the simulation's job to teaching the *concept* and let the real
+  app teach the *tool*.
+- Field task: the lighter option (a text field + manual status on the existing SCR-14) was
+  chosen over adding a dedicated new screen/Gate between SCR-13 and SCR-14. The heavier
+  option remains available later if the methodist wants the field component to have its own
+  ceremony/Gate — it was not implemented here because it would renumber the course's screen
+  count (15→16) and Gate count (10→11), which is a canon change, not a demo tweak.
+- `fieldEvidence` is a genuine, intentional extension of the 12-artifact list in
+  `ARTIFACT_MODEL.md` (now 13) — flagged there for methodist confirmation, the same way KZ
+  translations are flagged DRAFT rather than silently treated as final.
+- No screen was renumbered, no Gate↔screen mapping changed, no existing artifact ID/label
+  changed, and no backend/export/upload feature was added — "submitting" the field task only
+  records a reference string in the browser, same as every other text field in this demo.
 
 ## Scope confirmation
 
